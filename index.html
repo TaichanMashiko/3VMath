@@ -3,396 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>授業記録まとめ - 高機能版</title>
-    <!-- Font Awesome CDN (アイコン用) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>授業記録まとめ</title>
+    <!-- ↓↓↓ 本来ここにCSSファイルへのリンクが入ります ↓↓↓ -->
+    <!-- <link rel="stylesheet" href="/assets/css/style.css"> -->
     <style>
-        /* --- 基本設定と変数 --- */
-        :root {
-            --primary-color: #0056b3; /* メインカラー */
-            --secondary-color: #6c757d; /* サブカラー */
-            --background-color: #f9f9f9;
-            --card-bg-color: #ffffff;
-            --text-color: #333333;
-            --muted-text-color: #555555;
-            --border-color: #e0e0e0;
-            --tag-bg-color: #e9ecef;
-            --tag-text-color: #495057;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --link-color: var(--primary-color);
-            --link-hover-color: #003d80;
-            --header-footer-bg: #f1f3f5;
-            --button-primary-bg: var(--primary-color);
-            --button-primary-hover-bg: var(--link-hover-color);
-            --button-secondary-bg: var(--secondary-color);
-            --button-secondary-hover-bg: #5a6268;
-            --transition-speed: 0.2s;
-        }
-
-        /* ダークモード用変数 */
-        body.dark-mode {
-            --background-color: #212529;
-            --card-bg-color: #343a40;
-            --text-color: #f8f9fa;
-            --muted-text-color: #adb5bd;
-            --border-color: #495057;
-            --tag-bg-color: #495057;
-            --tag-text-color: #f8f9fa;
-            --shadow-color: rgba(255, 255, 255, 0.1);
-            --link-color: #60a5fa; /* 明るい青 */
-            --link-hover-color: #93c5fd;
-            --header-footer-bg: #343a40;
-            --button-primary-bg: var(--link-color);
-            --button-primary-hover-bg: var(--link-hover-color);
-            --button-secondary-bg: #495057;
-            --button-secondary-hover-bg: #6c757d;
-        }
-
-        /* --- 全体スタイル --- */
-        body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            margin: 0;
-            line-height: 1.7;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        a {
-            color: var(--link-color);
-            text-decoration: none;
-            transition: color var(--transition-speed) ease;
-        }
-        a:hover { color: var(--link-hover-color); }
-
-        button {
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 15px;
-            font-size: 0.95em;
-            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
-        }
-        button:hover { transform: translateY(-1px); }
-
-        /* --- ヘッダー --- */
-        .site-header {
-            background-color: var(--header-footer-bg);
-            padding: 20px;
-            margin-bottom: 30px;
-            border-bottom: 1px solid var(--border-color);
-            box-shadow: 0 2px 4px var(--shadow-color);
-            position: relative; /* ダークモードボタン配置用 */
-        }
-        .site-header h1 {
-            margin: 0 0 20px 0;
-            text-align: center;
-            color: var(--primary-color);
-            font-size: 1.8em;
-        }
-        body.dark-mode .site-header h1 { color: var(--link-color); }
-
-        /* --- 検索エリア --- */
-        .search-container {
-            display: flex; /* 横並び */
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .search-container input[type="search"] {
-            padding: 10px;
-            width: 300px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            font-size: 1em;
-            background-color: var(--card-bg-color); /* ダークモード対応 */
-            color: var(--text-color);
-        }
-        .search-container button {
-            background-color: var(--button-primary-bg);
-            color: white;
-        }
-        .search-container button:hover { background-color: var(--button-primary-hover-bg); }
-        .search-container button i { margin-right: 5px; } /* アイコン用 */
-
-        /* --- タグフィルターエリア --- */
-        .tag-list-container {
-            background-color: var(--card-bg-color);
-            padding: 15px 20px;
-            margin-bottom: 25px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px var(--shadow-color);
-        }
-        .tag-list-container h3 {
-            margin: 0 0 15px 0;
-            font-size: 1.1em;
-            color: var(--muted-text-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
-        }
-        #tagList {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .tag-filter {
-            background-color: var(--tag-bg-color);
-            color: var(--tag-text-color);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.9em;
-        }
-        .tag-filter:hover { background-color: var(--secondary-color); color: white; }
-        .tag-filter.active {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: bold;
-        }
-        body.dark-mode .tag-filter.active { background-color: var(--link-color); }
-        .tag-filter.reset-filter { /* クリアボタン用 */
-             background-color: #dc3545; /* 赤系 */
-             color: white;
-        }
-         .tag-filter.reset-filter:hover { background-color: #c82333; }
-
-        /* --- コントロールエリア（ソート、件数） --- */
-        .controls {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap; /* 画面幅が狭い時用 */
-            gap: 10px;
-        }
-        .sort-button {
-            background-color: var(--button-secondary-bg);
-            color: white;
-        }
-        .sort-button:hover { background-color: var(--button-secondary-hover-bg); }
-        .sort-button i { margin-right: 5px; } /* アイコン用 */
-        #resultsCount { font-size: 0.95em; color: var(--muted-text-color); }
-
-        /* --- メインコンテンツ見出し --- */
-        .main-content h2 {
-            font-size: 1.5em;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 8px;
-            margin-bottom: 25px;
-            color: var(--text-color);
-        }
-        body.dark-mode .main-content h2 { border-bottom-color: var(--link-color); }
-
-        /* --- カードグリッド --- */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* カード最小幅調整 */
-            gap: 25px;
-        }
-        /* カード読み込みアニメーション */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .card {
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 8px;
-            background-color: var(--card-bg-color);
-            box-shadow: 0 2px 5px var(--shadow-color);
-            display: flex;
-            flex-direction: column;
-            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
-            opacity: 0; /* 初期状態は非表示 */
-            animation: fadeIn 0.5s ease forwards; /* フェードインアニメーション */
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 10px var(--shadow-color);
-        }
-        .card-content { flex-grow: 1; }
-        .card-title {
-            margin-top: 0;
-            margin-bottom: 8px;
-            font-size: 1.2em;
-        }
-        .card-title a { font-weight: bold; }
-        .card-date {
-            font-size: 0.85em; /* 少し小さく */
-            color: var(--muted-text-color);
-            margin-bottom: 12px;
-        }
-        .card-summary {
-            margin-top: 0; /* 上の要素との間隔はdateで調整 */
-            margin-bottom: 15px;
-            font-size: 0.95em;
-            color: var(--text-color);
-            flex-grow: 1; /* 可変長の内容でもタグが下に揃うように */
-        }
-        .card-tags { margin-top: auto; padding-top: 10px; /* summaryとの間に少し余白 */ }
-        .tag {
-            background-color: var(--tag-bg-color);
-            color: var(--tag-text-color);
-            padding: 4px 10px; /* 少し調整 */
-            border-radius: 15px;
-            font-size: 0.8em; /* 少し小さく */
-            margin-right: 6px;
-            display: inline-block;
-            margin-bottom: 6px;
-            cursor: pointer;
-            border: 1px solid transparent; /* ホバー用 */
-            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
-        }
-        .tag:hover {
-            background-color: var(--secondary-color);
-            color: white;
-            border-color: var(--secondary-color);
-        }
-
-        /* --- フッター --- */
-        .site-footer {
-            background-color: var(--header-footer-bg);
-            padding: 20px;
-            margin-top: 40px;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            font-size: 0.9em;
-            color: var(--muted-text-color);
-        }
-
-        /* --- ダークモード切り替えボタン --- */
-        #darkModeToggle {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background: none;
-            border: 1px solid var(--muted-text-color);
-            color: var(--muted-text-color);
-            border-radius: 50%; /* 丸くする */
-            width: 40px;
-            height: 40px;
-            font-size: 1.2em;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease;
-        }
-         #darkModeToggle:hover {
-             color: var(--text-color);
-             border-color: var(--text-color);
-         }
-
-        /* --- ヘルパークラス --- */
-        .hidden { display: none; }
-
-        /* --- レスポンシブ対応 --- */
-        @media (max-width: 768px) {
-            .search-container { flex-direction: column; align-items: center;}
-            .search-container input[type="search"] { width: 80%; }
-            .search-container button { width: 80%; }
-            .controls { flex-direction: column; align-items: flex-start; }
-            .card-grid { grid-template-columns: 1fr; } /* 1列表示 */
-            .site-header h1 { font-size: 1.5em; }
-             #darkModeToggle { top: 10px; right: 10px; width: 35px; height: 35px; font-size: 1em;}
-        }
+        /* 最低限の見た目のための仮スタイル（後でCSSファイルに移行します） */
+        body { font-family: sans-serif; margin: 20px; line-height: 1.6; }
+        .site-header, .site-footer { background-color: #f0f0f0; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .site-header h1 { margin: 0 0 10px 0; }
+        .search-container { margin-bottom: 10px; }
+        .search-container input[type="search"] { padding: 8px; width: 250px; }
+        .search-container button { padding: 8px 12px; }
+        .category-nav ul { list-style: none; padding: 0; margin: 0; }
+        .category-nav li { display: inline-block; margin-right: 15px; }
+        .category-nav a { text-decoration: none; color: #007bff; }
+        .category-nav a:hover { text-decoration: underline; }
+        .main-content { max-width: 1200px; margin: 0 auto; } /* 中央寄せ */
+        .controls { margin-bottom: 15px; }
+        .sort-button { padding: 8px 12px; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-bottom: 15px;}
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; } /* カードサイズ調整 */
+        .card { border: 1px solid #ccc; padding: 15px; border-radius: 5px; background-color: #fff; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        .card-title { margin-top: 0; margin-bottom: 5px; font-size: 1.1em;}
+        .card-title a { text-decoration: none; color: #0056b3; font-weight: bold; }
+        .card-title a:hover { text-decoration: underline; }
+        .card-date { font-size: 0.9em; color: #555; margin-bottom: 10px; }
+        .card-summary { margin-top: 5px; margin-bottom: 10px; font-size: 0.95em; color: #333; }
+        .card-tags { margin-top: 10px; }
+        .tag { background-color: #e0e0e0; padding: 3px 8px; border-radius: 10px; font-size: 0.85em; margin-right: 5px; text-decoration: none; color: #333; display: inline-block; margin-bottom: 5px; }
+        .tag:hover { background-color: #c0c0c0; }
+        .site-footer p { margin: 0; text-align: center; font-size: 0.9em; color: #555; }
     </style>
 </head>
 <body>
 
     <header class="site-header">
-        <button id="darkModeToggle" title="ダークモード切替"><i class="fa-solid fa-moon"></i></button> <!-- ダークモードボタン -->
         <h1>授業記録まとめ</h1>
         <div class="search-container">
-            <input type="search" id="searchInput" placeholder="キーワードで検索...">
-            <button id="searchButton"><i class="fa-solid fa-magnifying-glass"></i> 検索</button>
+            <!-- 検索機能はまだ実装されていません -->
+            <input type="search" placeholder="キーワードで検索...">
+            <button>検索</button>
         </div>
+        <nav class="category-nav">
+            <ul>
+                <!-- カテゴリリンク（クリックしてもまだ正しく絞り込まれません） -->
+                <li><a href="#">すべて表示</a></li>
+                <li><a href="/categories/数学/">数学</a></li>
+                <li><a href="/categories/英語/">英語</a></li>
+                <li><a href="/categories/歴史/">歴史</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <main class="container main-content">
-        <div class="tag-list-container">
-            <h3><i class="fa-solid fa-tags"></i> タグで絞り込み:</h3>
-            <div id="tagList">
-                <button class="tag-filter active" data-tag="all">#すべて表示</button>
-                <button class="tag-filter reset-filter" id="resetFilters" title="フィルター解除"><i class="fa-solid fa-xmark"></i> リセット</button>
-                <!-- タグボタンはJavaScriptで動的に生成されます -->
-            </div>
-        </div>
-
+    <main class="main-content">
         <div class="controls">
-             <div><!-- 左寄せ用 -->
-                <button class="sort-button" id="sortButton" data-sort-order="desc">
-                    <i class="fa-solid fa-arrow-down-wide-short"></i> 日付 新しい順
-                </button>
-            </div>
-             <span id="resultsCount"></span> <!-- 右寄せ用 -->
+             <!-- 並べ替えボタン（まだ機能しません） -->
+            <button class="sort-button">日付 新しい順 ↑↓</button>
         </div>
 
-        <h2><i class="fa-solid fa-book-open"></i> 授業記録</h2>
-        <div class="card-grid" id="cardGrid">
-            <!-- カードデータ (前回の例と同じものを配置) -->
-            <article class="card" data-date="2025-04-21" data-tags="数学Ⅰ,乗法公式">
-                <div class="card-content">
-                    <h3 class="card-title"><a href="#">[数学] 乗法公式</a></h3>
-                    <p class="card-date">2025年4月21日</p>
-                    <p class="card-summary">中学校の乗法公式から高校の乗法公式まで</p>
-                </div>
+        <h2>新着の授業記録</h2>
+        <div class="card-grid">
+            <!-- ↓↓↓ Jekyllが自動生成したカード（サンプルデータ） ↓↓↓ -->
+
+             <article class="card">
+                 <!-- 詳細ページへのリンク（/lessons/history-kamakura.html は仮のパス） -->
+                <h3 class="card-title"><a href="20250422.html">[数学] 無限等比級数の和</a></h3>
+                <p class="card-date">2025年4月22日</p>
+                <p class="card-summary">無限等比級数の和の収束発散についてp>
                 <div class="card-tags">
-                    <span class="tag" data-tag="数学Ⅰ">#数学Ⅰ</span>
-                    <span class="tag" data-tag="乗法公式">#乗法公式</span>
+                    <!-- タグページへのリンク（/tags/前期/ などは仮のパス） -->
+                    <a href="/tags/前期/" class="tag">#数学Ⅲ</a>
+                    <a href="/tags/日本史/" class="tag">#無限等比級数</a>
                 </div>
             </article>
-            <article class="card" data-date="2025-04-18" data-tags="英語,文法,関係代名詞">
-                 <div class="card-content">
-                    <h3 class="card-title"><a href="#">[英語] 関係代名詞の基本</a></h3>
-                    <p class="card-date">2025年4月18日</p>
-                    <p class="card-summary">主格・目的格の関係代名詞の使い方を例文で解説</p>
-                </div>
-                <div class="card-tags">
-                    <span class="tag" data-tag="英語">#英語</span>
-                    <span class="tag" data-tag="文法">#文法</span>
-                    <span class="tag" data-tag="関係代名詞">#関係代名詞</span>
-                </div>
-            </article>
-            <article class="card" data-date="2025-04-15" data-tags="歴史,日本史,鎌倉時代">
-                 <div class="card-content">
-                    <h3 class="card-title"><a href="#">[歴史] 鎌倉時代の武士の生活</a></h3>
-                    <p class="card-date">2025年4月15日</p>
-                    <p class="card-summary">御家人制度と武士の暮らしぶりについて</p>
-                </div>
-                <div class="card-tags">
-                    <span class="tag" data-tag="歴史">#歴史</span>
-                    <span class="tag" data-tag="日本史">#日本史</span>
-                    <span class="tag" data-tag="鎌倉時代">#鎌倉時代</span>
-                </div>
-            </article>
-            <article class="card" data-date="2025-04-25" data-tags="数学Ⅰ,因数分解">
-                <div class="card-content">
-                    <h3 class="card-title"><a href="#">[数学] 因数分解の応用</a></h3>
-                    <p class="card-date">2025年4月25日</p>
-                    <p class="card-summary">たすき掛けや置き換えを利用した因数分解</p>
-                </div>
-                <div class="card-tags">
-                    <span class="tag" data-tag="数学Ⅰ">#数学Ⅰ</span>
-                    <span class="tag" data-tag="因数分解">#因数分解</span>
-                </div>
-            </article>
-             <article class="card" data-date="2025-03-10" data-tags="英語,長文読解">
-                <div class="card-content">
-                    <h3 class="card-title"><a href="#">[英語] 長文読解のコツ</a></h3>
-                    <p class="card-date">2025年3月10日</p>
-                    <p class="card-summary">時間内に正確に読むためのストラテジー</p>
-                </div>
-                <div class="card-tags">
-                    <span class="tag" data-tag="英語">#英語</span>
-                    <span class="tag" data-tag="長文読解">#長文読解</span>
-                </div>
-            </article>
+
+            <!-- ↑↑↑ ここまでが自動生成されたカードのサンプル ↑↑↑ -->
+            <!-- 実際には授業記録のMarkdownファイルが増えれば、ここにカードが追加されます -->
         </div>
     </main>
 
@@ -400,232 +86,7 @@
         <p>© 2025 水戸葵陵高校</p>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cardGrid = document.getElementById('cardGrid');
-            const allCards = Array.from(cardGrid.querySelectorAll('.card'));
-            const searchInput = document.getElementById('searchInput');
-            const searchButton = document.getElementById('searchButton');
-            const sortButton = document.getElementById('sortButton');
-            const tagListContainer = document.getElementById('tagList');
-            const resultsCount = document.getElementById('resultsCount');
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const resetFiltersButton = document.getElementById('resetFilters'); // リセットボタン
-
-            let currentFilterTag = 'all';
-            let currentSearchTerm = '';
-            let currentSortOrder = 'desc';
-
-            // --- ダークモード初期設定 ---
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-            const currentTheme = localStorage.getItem('theme');
-
-            function applyTheme(theme) {
-                if (theme === 'dark') {
-                    document.body.classList.add('dark-mode');
-                    darkModeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>'; // アイコンを太陽に
-                    darkModeToggle.title = 'ライトモードに切替';
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    document.body.classList.remove('dark-mode');
-                    darkModeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>'; // アイコンを月に
-                    darkModeToggle.title = 'ダークモードに切替';
-                    localStorage.setItem('theme', 'light');
-                }
-            }
-
-            // 初期テーマ設定（LocalStorage > OS設定 > デフォルトはライト）
-            if (currentTheme) {
-                applyTheme(currentTheme);
-            } else if (prefersDark.matches) {
-                 applyTheme('dark');
-            } else {
-                 applyTheme('light'); // デフォルト
-            }
-
-            // ダークモード切り替えイベント
-            darkModeToggle.addEventListener('click', () => {
-                const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
-                applyTheme(newTheme);
-            });
-            // OSの設定変更を検知（任意）
-            prefersDark.addEventListener('change', (e) => {
-                 // ローカルストレージに手動設定がない場合のみOS設定に追従
-                if (!localStorage.getItem('theme')) {
-                     applyTheme(e.matches ? 'dark' : 'light');
-                }
-            });
-
-
-            // --- カードデータ準備 (前回同様) ---
-            let cardData = allCards.map((card, index) => { // indexを追加してアニメーション遅延に利用
-                const tagsAttr = card.dataset.tags || '';
-                card.style.animationDelay = `${index * 0.05}s`; // カードごとに少し遅れてアニメーション開始
-                return {
-                    element: card,
-                    title: card.querySelector('.card-title a').textContent.toLowerCase(),
-                    summary: card.querySelector('.card-summary').textContent.toLowerCase(),
-                    date: new Date(card.dataset.date),
-                    tags: tagsAttr ? tagsAttr.split(',').map(t => t.trim().toLowerCase()) : [],
-                    dateString: card.dataset.date
-                };
-            });
-
-            // --- タグリスト生成 (前回同様 + リセットボタンの処理追加) ---
-            const uniqueTags = new Set();
-            const tagDisplayMap = new Map();
-            cardData.forEach(data => {
-                data.tags.forEach(tag => {
-                    if (tag) uniqueTags.add(tag);
-                });
-            });
-             allCards.forEach(card => {
-                const tagsAttr = card.dataset.tags || '';
-                tagsAttr.split(',').map(t => t.trim()).forEach(originalTag => {
-                    if (originalTag && !tagDisplayMap.has(originalTag.toLowerCase())) {
-                        tagDisplayMap.set(originalTag.toLowerCase(), originalTag);
-                    }
-                });
-            });
-            const sortedTags = Array.from(uniqueTags).sort();
-
-             // 既存の動的タグボタンをクリア（リセットボタンを除く）
-             Array.from(tagListContainer.children).forEach(child => {
-                 if (!child.classList.contains('tag-filter') || child.id === 'resetFilters' || child.dataset.tag === 'all') return;
-                 tagListContainer.removeChild(child);
-             });
-
-
-            sortedTags.forEach(tag => {
-                const button = document.createElement('button');
-                button.classList.add('tag-filter');
-                button.dataset.tag = tag;
-                button.textContent = `#${tagDisplayMap.get(tag) || tag}`;
-                 // リセットボタンの直前に挿入
-                 tagListContainer.insertBefore(button, resetFiltersButton);
-            });
-
-            // --- 表示更新関数 (アニメーションリセット追加) ---
-            function displayCards() {
-                // フィルタリング
-                const filteredByTag = cardData.filter(card =>
-                    currentFilterTag === 'all' || card.tags.includes(currentFilterTag)
-                );
-                const filteredBySearch = filteredByTag.filter(card => {
-                    const searchTerm = currentSearchTerm; // 検索語を小文字化済み
-                    return card.title.includes(searchTerm) ||
-                           card.summary.includes(searchTerm) ||
-                           card.tags.some(tag => tag.includes(searchTerm));
-                 });
-
-                // ソート
-                filteredBySearch.sort((a, b) => {
-                    if (currentSortOrder === 'desc') {
-                        return b.date - a.date;
-                    } else {
-                        return a.date - b.date;
-                    }
-                });
-
-                // DOM更新
-                cardGrid.innerHTML = ''; // クリア
-                if (filteredBySearch.length > 0) {
-                    filteredBySearch.forEach((card, index) => {
-                        card.element.style.animationDelay = `${index * 0.05}s`; // 表示順でアニメーション遅延を再設定
-                        card.element.style.opacity = '0'; // 一旦非表示にしてアニメーションを再トリガー
-                        cardGrid.appendChild(card.element);
-                        // アニメーション再トリガーのためのわずかな遅延（requestAnimationFrameでも良い）
-                         setTimeout(() => { card.element.style.opacity = '1'; }, 10);
-                    });
-                } else {
-                    cardGrid.innerHTML = '<p>該当する授業記録が見つかりませんでした。</p>';
-                }
-
-                // 件数表示
-                resultsCount.textContent = `${filteredBySearch.length}件 表示中`;
-
-                // アクティブタグ更新
-                document.querySelectorAll('.tag-filter').forEach(btn => {
-                     btn.classList.toggle('active', btn.dataset.tag === currentFilterTag && currentFilterTag !== 'all');
-                 });
-                  // 「すべて表示」ボタンのアクティブ状態
-                  document.querySelector('.tag-filter[data-tag="all"]').classList.toggle('active', currentFilterTag === 'all');
-
-
-                // カード内タグリスナー再設定
-                addCardTagListeners();
-            }
-
-            // --- カード内タグクリック用リスナー関数 (前回同様) ---
-            function addCardTagListeners() {
-                 document.querySelectorAll('.card .tag').forEach(tagElement => {
-                     tagElement.removeEventListener('click', handleTagClick); // 重複防止
-                     tagElement.addEventListener('click', handleTagClick);
-                 });
-            }
-
-            // --- イベントハンドラ ---
-            function handleTagClick(event) {
-                 const clickedTag = event.target.dataset.tag.toLowerCase();
-                 currentFilterTag = clickedTag;
-                 // タグ選択時に検索キーワードをリセットするかどうかは仕様による
-                 // currentSearchTerm = '';
-                 // searchInput.value = '';
-                 displayCards();
-            }
-
-            function handleSearch() {
-                currentSearchTerm = searchInput.value.trim().toLowerCase();
-                // 検索実行時、タグフィルターをどうするか？
-                // currentFilterTag = 'all'; // タグフィルターをリセットする場合
-                displayCards();
-            }
-
-            function handleSort() {
-                const sortIcon = sortButton.querySelector('i');
-                if (currentSortOrder === 'desc') {
-                    currentSortOrder = 'asc';
-                    sortButton.innerHTML = '<i class="fa-solid fa-arrow-up-short-wide"></i> 日付 古い順';
-                    sortButton.dataset.sortOrder = 'asc';
-                } else {
-                    currentSortOrder = 'desc';
-                    sortButton.innerHTML = '<i class="fa-solid fa-arrow-down-wide-short"></i> 日付 新しい順';
-                    sortButton.dataset.sortOrder = 'desc';
-                }
-                displayCards();
-            }
-
-             // リセットボタンの処理
-            function handleResetFilters() {
-                 currentFilterTag = 'all';
-                 currentSearchTerm = '';
-                 searchInput.value = '';
-                 // ソート順はリセットしない（または必要ならリセット）
-                 // currentSortOrder = 'desc';
-                 // sortButton.innerHTML = '<i class="fa-solid fa-arrow-down-wide-short"></i> 日付 新しい順';
-                 // sortButton.dataset.sortOrder = 'desc';
-                 displayCards();
-            }
-
-
-            // --- イベントリスナー設定 ---
-            searchButton.addEventListener('click', handleSearch);
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleSearch();
-            });
-            sortButton.addEventListener('click', handleSort);
-            tagListContainer.addEventListener('click', (event) => {
-                if (event.target.classList.contains('tag-filter') && event.target.id !== 'resetFilters') { // リセットボタン以外
-                    handleTagClick(event);
-                }
-            });
-             resetFiltersButton.addEventListener('click', handleResetFilters); // リセットボタン
-            addCardTagListeners(); // 初期設定
-
-            // --- 初期表示 ---
-            displayCards();
-        });
-    </script>
+    <!-- JavaScriptファイルへのリンクも本来はここに記述されます（検索、ソート等） -->
 
 </body>
 </html>
