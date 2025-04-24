@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>無限等比級数</title>
+    <!-- MathJax の読み込みコード -->
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; }
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        /* preタグのスタイル修正 */
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow-x: auto; /* 横スクロールを可能に */
+            font-size: 0.95em;
+            white-space: pre-wrap; /* 自動改行を許可 */
+            word-wrap: break-word; /* 長い単語の折り返し */
+        }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; /* 親要素のwhite-space設定を継承 */ }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        /* details内の要素のはみ出し防止 */
+        details > *:not(summary) {
+             padding: 1em;
+             border-top: 1px solid #eee;
+             overflow-wrap: break-word; /* URLや長い単語の折り返し */
+             word-wrap: break-word; /* 旧ブラウザ用 */
+             overflow-x: auto; /* はみ出した場合はスクロール */
+        }
+        /* MathJaxのコンテナに対しても設定を試みる（必要に応じて） */
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] {
+             overflow-x: auto;
+             max-width: 100%;
+        }
+
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em;
+            margin-bottom: 1.5em;
+            padding: 1em 1.5em;
+            border-radius: 5px;
+            border-left-width: 5px;
+            border-left-style: solid;
+        }
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; } /* 水色系 */
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; } /* 緑色系 */
+        .example { background-color: #fff3e0; border-left-color: #ff9800; } /* オレンジ系 */
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; } /* ピンク系 */
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; } /* 黄色系 */
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; } /* 紫色系 */
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; } /* 赤色系 */
+        .caution { background-color: #ffebee; border-left-color: #f44336; } /* 赤色系 */
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; } /* 青色系 */
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; } /* 藍色系 */
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; /* 青緑系 */ }
+
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%); /* 中央揃え */
+            bottom: 130%; /* 要素の上に表示、少し離す */
+            background-color: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            visibility: hidden; /* 初期状態は非表示 */
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 100; /* 他の要素より手前に */
+            pointer-events: none; /* ツールチップ自体がマウスイベントを受けないように */
+        }
+        .tooltip:hover::after {
+            visibility: visible; /* ホバー時に表示 */
+            opacity: 1;
+        }
+
+        /* 難易度・重要度表示用 */
+        .difficulty, .importance {
+            display: inline-block;
+            font-size: 0.85em;
+            padding: 0.1em 0.5em;
+            margin-left: 0.5em;
+            border-radius: 3px;
+            vertical-align: middle; /* 見出しなどと高さを合わせる */
+        }
+        .difficulty { background-color: #eee; color: #333; } /* 難易度用スタイル */
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用スタイル */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 1.5em;
+            background-color: #f9f9f9; /* detailsの背景色 */
+        }
+        .toc-toggle summary {
+            padding: 0.8em 1em;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: transparent; /* 親要素の色を使う */
+            border-radius: 4px; /* 閉じたときの角丸 */
+            margin: 0; /* summaryのデフォルトマージン削除 */
+        }
+        details[open].toc-toggle > summary {
+             border-bottom: 1px solid #ccc; /* 開いたときの境界線 */
+             border-radius: 4px 4px 0 0; /* 開いたときの角丸 */
+        }
+        .toc-toggle summary h2 { /* summary内のh2のスタイル調整 */
+            display: inline; /* 横並びにする */
+            margin: 0;
+            border: none; /* h2のデフォルト下線を消す */
+            padding: 0;
+            font-size: 1.2em; /* 少し大きく */
+        }
+        .toc-toggle nav {
+            padding: 0 1.5em 1em 1.5em; /* 開いたときの内側のパディング */
+            /* border-top: 1px solid #eee; 上のsummaryとの境界線で代用 */
+            background-color: white; /* 中身は白い背景 */
+            border-radius: 0 0 4px 4px;
+        }
+        .toc-toggle nav h2 { /* nav内のh2（目次タイトル）は不要なので隠すか削除 */
+           display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>無限等比級数</h1>
+
+    <p><strong>授業日:</strong> 2023年10月27日 (推定)</p>
+    <p><strong>単元名:</strong> 無限等比級数</p>
+    <p><strong>講師名:</strong> 益子泰地</p>
+    <p><strong>本日の学習目標 (推定):</strong></p>
+    <ul>
+        <li>無限等比級数の収束条件を理解し、適用できるようになる。</li>
+        <li>収束する場合の無限等比級数の和を求められるようになる。</li>
+        <li>無限級数の性質を理解し、計算に応用できるようになる。</li>
+    </ul>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#section1">1. 無限等比級数とは</a></li>
+                <li><a href="#section2">2. 無限等比級数の収束条件</a></li>
+                <li><a href="#section3">3. 例題7: 収束条件の応用</a>
+                    <ul>
+                        <li><a href="#example7-1">3.1 問題</a></li>
+                        <li><a href="#example7-2">3.2 解説</a></li>
+                        <li><a href="#quiz1">3.3 理解度チェック</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section4">4. 無限級数の性質</a></li>
+                <li><a href="#section5">5. 例題8: 無限級数の計算</a>
+                    <ul>
+                        <li><a href="#example8-1">5.1 問題</a></li>
+                        <li><a href="#example8-2">5.2 解説</a></li>
+                        <li><a href="#quiz2">5.3 理解度チェック</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section6">6. 公式の使い分けガイド</a></li>
+                <li><a href="#section7">7. 練習問題</a></li>
+                <li><a href="#section8">8. 発展問題</a></li>
+                <li><a href="#section9">9. まとめ</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <section id="section1">
+        <h2>1. 無限等比級数とは 📖 <span class="importance">★★★</span></h2>
+        <div class="definition">
+            <p><span class="tooltip" data-tooltip="初項 a に公比 r を次々にかけて得られる数列 a, ar, ar^2, ...">等比数列</span>の項を無限に足し合わせたものを<span class="tooltip" data-tooltip="等比数列の項を無限に足し合わせた級数。a + ar + ar^2 + ...">無限等比級数</span>といいます。</p>
+            <p>具体的には、初項 $a$、公比 $r$ の無限等比級数は以下のように表されます。</p>
+            $$ a + ar + ar^2 + ar^3 + \dots + ar^{n-1} + \dots = \sum_{n=1}^{\infty} ar^{n-1} $$
+        </div>
+        <div class="supplement">
+            ➕ <strong>補足: Σ記号について</strong>
+            <p>Σ (シグマ) は、数列の和を表す記号です。 $\sum_{n=1}^{\infty} ar^{n-1}$ は、「$n=1$ から始めて $n$ を $2, 3, \dots$ と無限に大きくしながら $ar^{n-1}$ を計算し、それらをすべて足し合わせる」という意味になります。</p>
+        </div>
+    </section>
+
+    <section id="section2">
+        <h2>2. 無限等比級数の収束条件 📜 <span class="importance">★★★</span></h2>
+        <p>無限等比級数が<span class="tooltip" data-tooltip="無限級数の和が有限な値に近づくこと。">収束</span>するための条件は、以下のいずれかの場合です。</p>
+        <div class="theorem">
+            <p>初項 $a$、公比 $r$ の無限等比級数 $\sum_{n=1}^{\infty} ar^{n-1}$ が収束するための条件は、</p>
+            <ol>
+                <li><strong>初項 $a = 0$</strong></li>
+                <li><strong>公比 $r$ の<span class="tooltip" data-tooltip="数直線上で、原点からその数までの距離。r の絶対値は |r| と表す。">絶対値</span>が 1 より小さい ($|r| < 1$)</strong></li>
+            </ol>
+            <p>のいずれかが成り立つことです。</p>
+            <p>特に、$a \neq 0$ かつ $|r| < 1$ のとき、その和 $S$ は以下の公式で求められます。</p>
+            $$ S = \frac{a}{1-r} $$
+        </div>
+        <div class="important">
+            ⭐ <strong>重要ポイント</strong>
+            <ul>
+                <li>$|r| \ge 1$ の場合 (ただし $a \neq 0$)、無限等比級数は<span class="tooltip" data-tooltip="無限級数の和が有限な値に収束しないこと。無限大になる、振動するなど。">発散</span>します。</li>
+                <li>収束条件を考える際は、初項が 0 の場合と、公比の絶対値が 1 より小さい場合の 2 パターンを分けて考える必要があります。</li>
+            </ul>
+        </div>
+        <div class="caution">
+            ⚠️ <strong>間違いやすいポイント</strong>
+            <ul>
+                <li><strong>公比の条件 $|r| < 1$ の見落とし:</strong> 収束する場合の和の公式 $\frac{a}{1-r}$ は、 $|r| < 1$ のときにのみ適用可能です。この条件を確認せずに公式を使ってしまう間違いがあります。</li>
+                <li><strong>絶対値の扱い:</strong> $|r| < 1$ は $-1 < r < 1$ と同値です。不等式を解く際に、この変形を正しく行う必要があります。例えば、 $|x-1| < 1$ を解く場合、$-1 < x-1 < 1$ となり、各辺に 1 を加えて $0 < x < 2$ となります。</li>
+                <li><strong>初項 $a=0$ の場合の考慮漏れ:</strong> 公比 $r$ の値に関わらず、初項 $a=0$ であれば級数のすべての項が 0 となり、和は 0 に収束します。このケースを忘れないようにしましょう。</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="section3">
+        <h2>3. 例題7: 収束条件の応用 ✍️</h2>
+        <section id="example7-1">
+            <h3>3.1 問題 <span class="difficulty">★★☆</span></h3>
+            <div class="example">
+                <p>初項 $x$、公比 $x-1$ の無限等比級数について、収束するような実数 $x$ の値の範囲を求めよ。また、そのときの和を求めよ。</p>
+            </div>
+        </section>
+        <section id="example7-2">
+            <h3>3.2 解説</h3>
+            <details>
+                <summary>解答・解説を表示</summary>
+                <p>無限等比級数が収束するための条件は、初項が 0 または公比の絶対値が 1 より小さいことです。</p>
+                <p>この問題では、初項は $a = x$、公比は $r = x-1$ です。</p>
+                <p><strong>(i) 初項 $a = 0$ の場合</strong></p>
+                <p>$x = 0$</p>
+                <p>このとき、級数の各項はすべて 0 となるため、和は 0 に収束します。</p>
+                <p><strong>(ii) 公比 $r$ の絶対値が 1 より小さい ($|r| < 1$) の場合</strong></p>
+                <p>$|x-1| < 1$</p>
+                <p>この絶対値不等式を解くと、</p>
+                $$ -1 < x-1 < 1 $$
+                <p>各辺に 1 を加えて、</p>
+                $$ 0 < x < 2 $$
+                <p>この範囲のとき、級数は収束します。</p>
+                <p><strong>収束する $x$ の範囲</strong></p>
+                <p>(i), (ii) より、この無限等比級数が収束するための $x$ の値の範囲は、</p>
+                $$ x=0 \quad \text{または} \quad 0 < x < 2 $$
+                <p><strong>収束するときの和</strong></p>
+                <ul>
+                    <li>$x=0$ のとき、和は $S = 0$ です。</li>
+                    <li>$0 < x < 2$ ($a \neq 0$ かつ $|r|<1$) のとき、和の公式 $S = \frac{a}{1-r}$ を用いて、
+                        $$ S = \frac{x}{1-(x-1)} = \frac{x}{1-x+1} = \frac{x}{2-x} $$
+                    </li>
+                </ul>
+                <p>したがって、</p>
+                <ul>
+                    <li>$x=0$ のとき、和は $0$</li>
+                    <li>$0 < x < 2$ のとき、和は $\frac{x}{2-x}$</li>
+                </ul>
+                <p>となります。</p>
+            </details>
+        </section>
+        <section id="quiz1">
+             <h3>3.3 理解度チェック ✏️</h3>
+             <div class="quiz">
+                 <p><strong>問題:</strong> 初項 $2x$、公比 $x$ の無限等比級数が収束するための $x$ の値の範囲として正しいものを一つ選びなさい。</p>
+                 <ol>
+                     <li>(A) $0 < x < 1$</li>
+                     <li>(B) $-1 < x < 1$</li>
+                     <li>(C) $x=0$ または $-1 < x < 1$</li>
+                     <li>(D) $x=0$ または $0 \le x < 1$</li>
+                 </ol>
+                 <details>
+                     <summary>解答・解説を表示</summary>
+                     <p><strong>解答:</strong> (C)</p>
+                     <p><strong>解説:</strong></p>
+                     <p>収束条件は、初項が 0 または公比の絶対値が 1 より小さいことです。</p>
+                     <ol>
+                         <li>初項 $2x = 0$ のとき、$x=0$。</li>
+                         <li>公比 $|x| < 1$ のとき、$-1 < x < 1$。</li>
+                     </ol>
+                     <p>よって、収束する範囲は $x=0$ または $-1 < x < 1$ となります。</p>
+                 </details>
+             </div>
+         </section>
+    </section>
+
+    <section id="section4">
+        <h2>4. 無限級数の性質 📜 <span class="importance">★★☆</span></h2>
+        <p>収束する無限級数には、以下のような性質があります。これは無限等比級数に限らず、一般の無限級数で成り立ちます。</p>
+        <div class="theorem">
+            <p>無限級数 $\sum_{n=1}^{\infty} a_n = S$, $\sum_{n=1}^{\infty} b_n = T$ がそれぞれ収束するとき、以下の性質が成り立ちます。（$k$ は定数）</p>
+            <ol>
+                <li>$\sum_{n=1}^{\infty} k a_n = k \sum_{n=1}^{\infty} a_n = kS$</li>
+                <li>$\sum_{n=1}^{\infty} (a_n + b_n) = \sum_{n=1}^{\infty} a_n + \sum_{n=1}^{\infty} b_n = S + T$</li>
+                <li>$\sum_{n=1}^{\infty} (a_n - b_n) = \sum_{n=1}^{\infty} a_n - \sum_{n=1}^{\infty} b_n = S - T$</li>
+            </ol>
+        </div>
+        <div class="tips">
+            💡 <strong>Tips: 性質の意味</strong>
+            <ul>
+                <li>性質1は、級数の各項を定数倍してから和をとっても、先に和を求めてから定数倍しても結果は同じであることを意味します。</li>
+                <li>性質2, 3は、2つの収束する級数の和や差は、それぞれの級数の和や差に等しいことを意味します。つまり、Σ記号は足し算・引き算について分配法則のように扱うことができます。</li>
+            </ul>
+        </div>
+        <div class="caution">
+            ⚠️ <strong>注意</strong>
+            <p>この性質は、元の級数 $\sum a_n$ と $\sum b_n$ が **収束する場合にのみ** 成り立ちます。発散する級数に対しては、これらの性質を安易に適用することはできません。</p>
+        </div>
+    </section>
+
+    <section id="section5">
+        <h2>5. 例題8: 無限級数の計算 ✍️</h2>
+        <section id="example8-1">
+            <h3>5.1 問題 <span class="difficulty">★★☆</span></h3>
+            <div class="example">
+                <p>次の無限級数の和を求めよ。</p>
+                $$ \sum_{n=1}^{\infty} \left( \frac{3}{2^n} + \frac{2}{3^n} \right) $$
+            </div>
+        </section>
+        <section id="example8-2">
+            <h3>5.2 解説</h3>
+            <details>
+                <summary>解答・解説を表示</summary>
+                <p>無限級数の性質を利用して、与えられた級数を2つの無限級数の和に分解します。</p>
+                $$ \sum_{n=1}^{\infty} \left( \frac{3}{2^n} + \frac{2}{3^n} \right) = \sum_{n=1}^{\infty} \frac{3}{2^n} + \sum_{n=1}^{\infty} \frac{2}{3^n} $$
+                <p>それぞれの級数が収束するかどうかを確認し、収束する場合はその和を求めます。</p>
+                <p><strong>(i) $\sum_{n=1}^{\infty} \frac{3}{2^n}$ について</strong></p>
+                <p>これは、$\frac{3}{2^n} = 3 \left(\frac{1}{2}\right)^n$ と考えられます。$n=1, 2, 3, \dots$ とすると、</p>
+                $$ \frac{3}{2}, \frac{3}{4}, \frac{3}{8}, \dots $$
+                <p>これは、初項 $a_1 = \frac{3}{2}$、公比 $r_1 = \frac{1}{2}$ の無限等比級数です。</p>
+                <p>公比の絶対値は $|r_1| = |\frac{1}{2}| = \frac{1}{2} < 1$ なので、この級数は収束します。</p>
+                <p>その和 $S_1$ は、</p>
+                $$ S_1 = \frac{a_1}{1-r_1} = \frac{3/2}{1 - 1/2} = \frac{3/2}{1/2} = 3 $$
+                <p><strong>(ii) $\sum_{n=1}^{\infty} \frac{2}{3^n}$ について</strong></p>
+                <p>これは、$\frac{2}{3^n} = 2 \left(\frac{1}{3}\right)^n$ と考えられます。$n=1, 2, 3, \dots$ とすると、</p>
+                $$ \frac{2}{3}, \frac{2}{9}, \frac{2}{27}, \dots $$
+                <p>これは、初項 $a_2 = \frac{2}{3}$、公比 $r_2 = \frac{1}{3}$ の無限等比級数です。</p>
+                <p>公比の絶対値は $|r_2| = |\frac{1}{3}| = \frac{1}{3} < 1$ なので、この級数は収束します。</p>
+                <p>その和 $S_2$ は、</p>
+                $$ S_2 = \frac{a_2}{1-r_2} = \frac{2/3}{1 - 1/3} = \frac{2/3}{2/3} = 1 $$
+                <p><strong>求める和</strong></p>
+                <p>したがって、元の無限級数の和は、</p>
+                $$ \sum_{n=1}^{\infty} \left( \frac{3}{2^n} + \frac{2}{3^n} \right) = S_1 + S_2 = 3 + 1 = 4 $$
+                <p>となります。</p>
+            </details>
+        </section>
+         <section id="quiz2">
+             <h3>5.3 理解度チェック ✏️</h3>
+             <div class="quiz">
+                 <p><strong>問題:</strong> 無限級数 $\sum_{n=1}^{\infty} \left( \frac{1}{4^n} - \frac{1}{5^n} \right)$ の和として正しいものを一つ選びなさい。</p>
+                 <ol>
+                     <li>(A) $\frac{1}{12}$</li>
+                     <li>(B) $\frac{1}{20}$</li>
+                     <li>(C) $\frac{7}{12}$</li>
+                     <li>(D) $\frac{9}{20}$</li>
+                 </ol>
+                 <details>
+                     <summary>解答・解説を表示</summary>
+                     <p><strong>解答:</strong> (A)</p>
+                     <p><strong>解説:</strong></p>
+                     <p>級数を分解します: $\sum_{n=1}^{\infty} \frac{1}{4^n} - \sum_{n=1}^{\infty} \frac{1}{5^n}$</p>
+                     <p>$\sum_{n=1}^{\infty} \frac{1}{4^n}$ は初項 $\frac{1}{4}$、公比 $\frac{1}{4}$ の無限等比級数で、和は $\frac{1/4}{1-1/4} = \frac{1/4}{3/4} = \frac{1}{3}$ です。</p>
+                     <p>$\sum_{n=1}^{\infty} \frac{1}{5^n}$ は初項 $\frac{1}{5}$、公比 $\frac{1}{5}$ の無限等比級数で、和は $\frac{1/5}{1-1/5} = \frac{1/5}{4/5} = \frac{1}{4}$ です。</p>
+                     <p>よって、求める和は $\frac{1}{3} - \frac{1}{4} = \frac{4-3}{12} = \frac{1}{12}$ となります。</p>
+                 </details>
+             </div>
+         </section>
+    </section>
+
+    <section id="section6">
+        <h2>6. 公式の使い分けガイド 🗺️</h2>
+        <div class="formula-guide">
+            <p>無限等比級数の問題では、主に2つのステップがあります。</p>
+            <ul>
+                <li>
+                    <strong>ステップ1: 収束するかどうかの判定</strong><span class="importance">★★★</span>
+                    <p>まず、与えられた無限等比級数が収束するかどうかを確認します。以下の条件をチェックします。</p>
+                    <ol>
+                        <li>初項 $a=0$ か？ → YESなら収束 (和は0)</li>
+                        <li>(初項 $a \neq 0$ の場合) 公比 $r$ について $|r| < 1$ (つまり $-1 < r < 1$) か？ → YESなら収束</li>
+                        <li>上記以外の場合 ($a \neq 0$ かつ $|r| \ge 1$) → 発散</li>
+                    </ol>
+                    <p><em>使う条件:</em> $a=0$ または $|r|<1$</p>
+                </li>
+                <li>
+                    <strong>ステップ2: (収束する場合) 和の計算</strong><span class="importance">★★☆</span>
+                    <p>ステップ1で収束すると判定された場合（かつ $a \neq 0, |r|<1$ の場合）、その和 $S$ を計算します。</p>
+                    <p><em>使う公式:</em> $S = \frac{a}{1-r}$</p>
+                </li>
+            </ul>
+            <p>文字（例: $x$）を含む級数の場合は、まずステップ1の条件から $x$ の範囲を求め、次にその範囲に応じてステップ2の公式を用いて和を $x$ の式で表します。</p>
+            <p>複数の級数の和や差の形になっている場合は、まずそれぞれの級数が収束するか（ステップ1）を確認し、両方収束する場合に限り、それぞれの和を計算（ステップ2）して最後に足し引きします（無限級数の性質を利用）。</p>
+        </div>
+    </section>
+
+     <section id="section7">
+        <h2>7. 練習問題 ✏️</h2>
+        <div class="practice-problems">
+            <p><strong>練習問題 1</strong> <span class="difficulty">★☆☆</span></p>
+            <p>次の無限等比級数の収束・発散を調べ、収束する場合はその和を求めよ。</p>
+            <p>(1) $1 + \frac{1}{3} + \frac{1}{9} + \dots$</p>
+            <p>(2) $2 - 4 + 8 - 16 + \dots$</p>
+            <details>
+                <summary>解答・解説を表示</summary>
+                <p><strong>(1)</strong></p>
+                <p>初項 $a=1$、公比 $r=\frac{1}{3}$ です。</p>
+                <p>$|r| = |\frac{1}{3}| = \frac{1}{3} < 1$ なので、この級数は収束します。</p>
+                <p>和は $S = \frac{a}{1-r} = \frac{1}{1 - 1/3} = \frac{1}{2/3} = \frac{3}{2}$ です。</p>
+                <p><strong>(2)</strong></p>
+                <p>初項 $a=2$、公比 $r=\frac{-4}{2} = -2$ です。</p>
+                <p>$|r| = |-2| = 2 \ge 1$ なので、この級数は発散します。</p>
+            </details>
+        </div>
+        <div class="practice-problems">
+            <p><strong>練習問題 2</strong> <span class="difficulty">★★☆</span></p>
+            <p>次の無限級数の和を求めよ。</p>
+            $$ \sum_{n=1}^{\infty} \left( \left(\frac{2}{3}\right)^n + 3 \left(-\frac{1}{2}\right)^n \right) $$
+            <details>
+                <summary>解答・解説を表示</summary>
+                <p>級数を分解します: $\sum_{n=1}^{\infty} \left(\frac{2}{3}\right)^n + \sum_{n=1}^{\infty} 3 \left(-\frac{1}{2}\right)^n$</p>
+                <p>$\sum_{n=1}^{\infty} \left(\frac{2}{3}\right)^n$ は初項 $\frac{2}{3}$、公比 $\frac{2}{3}$ ($|\frac{2}{3}| < 1$) の無限等比級数なので収束します。和は $\frac{2/3}{1 - 2/3} = \frac{2/3}{1/3} = 2$ です。</p>
+                <p>$\sum_{n=1}^{\infty} 3 \left(-\frac{1}{2}\right)^n$ は、初項 $3(-\frac{1}{2}) = -\frac{3}{2}$、公比 $-\frac{1}{2}$ ($|-\frac{1}{2}| < 1$) の無限等比級数なので収束します。和は $\frac{-3/2}{1 - (-1/2)} = \frac{-3/2}{3/2} = -1$ です。</p>
+                 <p>(別解: $\sum 3 (-\frac{1}{2})^n = 3 \sum (-\frac{1}{2})^n$ と考えて、$\sum (-\frac{1}{2})^n$ の和が $\frac{-1/2}{1-(-1/2)} = \frac{-1/2}{3/2} = -\frac{1}{3}$ なので、$3 \times (-\frac{1}{3}) = -1$ としても良いです。)</p>
+                <p>よって、求める和は $2 + (-1) = 1$ となります。</p>
+            </details>
+        </div>
+    </section>
+
+    <section id="section8">
+        <h2>8. 発展問題 ✏️</h2>
+        <div class="practice-problems">
+            <p><strong>発展問題 1</strong> <span class="difficulty">★★★</span></p>
+            <p>無限等比級数 $1 + (2x+1) + (2x+1)^2 + \dots$ が収束し、かつその和が $\frac{1}{3}$ となるような実数 $x$ の値を求めよ。</p>
+            <details>
+                <summary>解答・解説を表示</summary>
+                <p>この級数は、初項 $a=1$、公比 $r = 2x+1$ の無限等比級数です。</p>
+                <p>まず、級数が収束するための条件を求めます。初項 $a=1 \neq 0$ なので、公比の条件 $|r| < 1$ が必要です。</p>
+                $$ |2x+1| < 1 $$
+                $$ -1 < 2x+1 < 1 $$
+                <p>各辺から 1 を引くと、</p>
+                $$ -2 < 2x < 0 $$
+                <p>各辺を 2 で割ると、</p>
+                $$ -1 < x < 0 $$
+                <p>この範囲で級数は収束します。</p>
+                <p>次に、収束するときの和が $\frac{1}{3}$ となる条件を考えます。和の公式 $S = \frac{a}{1-r}$ を用いて、</p>
+                $$ S = \frac{1}{1-(2x+1)} = \frac{1}{1-2x-1} = \frac{1}{-2x} $$
+                <p>この和が $\frac{1}{3}$ に等しいので、</p>
+                $$ \frac{1}{-2x} = \frac{1}{3} $$
+                <p>分母を比較して、 $-2x = 3$</p>
+                $$ x = -\frac{3}{2} $$
+                <p>しかし、この値 $x = -\frac{3}{2}$ は、収束条件である $-1 < x < 0$ を満たしません。</p>
+                <p>したがって、この無限等比級数の和が $\frac{1}{3}$ となるような実数 $x$ は存在しません。</p>
+                 <p>（もし和が例えば $\frac{1}{1.5} = \frac{2}{3}$ となる $x$ を求める問題であれば、$x = -\frac{3}{4}$ となり、これは収束範囲内なので解が存在します。）</p>
+            </details>
+        </div>
+         <div class="practice-problems">
+            <p><strong>発展問題 2</strong> <span class="difficulty">★★★</span></p>
+            <p>無限級数 $\sum_{n=1}^{\infty} \frac{2^n + (-1)^{n+1}}{3^n}$ の和を求めよ。</p>
+            <details>
+                <summary>解答・解説を表示</summary>
+                <p>与えられた級数を分解します。</p>
+                $$ \sum_{n=1}^{\infty} \frac{2^n + (-1)^{n+1}}{3^n} = \sum_{n=1}^{\infty} \frac{2^n}{3^n} + \sum_{n=1}^{\infty} \frac{(-1)^{n+1}}{3^n} $$
+                $$ = \sum_{n=1}^{\infty} \left(\frac{2}{3}\right)^n + \sum_{n=1}^{\infty} (-1) \frac{(-1)^n}{3^n} $$
+                $$ = \sum_{n=1}^{\infty} \left(\frac{2}{3}\right)^n - \sum_{n=1}^{\infty} \left(-\frac{1}{3}\right)^n $$
+                <p>それぞれの級数の和を計算します。</p>
+                <p>$\sum_{n=1}^{\infty} \left(\frac{2}{3}\right)^n$ は、初項 $\frac{2}{3}$、公比 $\frac{2}{3}$ の無限等比級数です。和は $\frac{2/3}{1 - 2/3} = \frac{2/3}{1/3} = 2$ です。</p>
+                <p>$\sum_{n=1}^{\infty} \left(-\frac{1}{3}\right)^n$ は、初項 $-\frac{1}{3}$、公比 $-\frac{1}{3}$ の無限等比級数です。和は $\frac{-1/3}{1 - (-1/3)} = \frac{-1/3}{1 + 1/3} = \frac{-1/3}{4/3} = -\frac{1}{4}$ です。</p>
+                <p>よって、求める和は、</p>
+                $$ 2 - \left(-\frac{1}{4}\right) = 2 + \frac{1}{4} = \frac{8+1}{4} = \frac{9}{4} $$
+                <p>となります。</p>
+            </details>
+        </div>
+    </section>
+
+    <section id="section9">
+        <h2>9. まとめ 🔖 <span class="importance">★★★</span></h2>
+        <div class="summary">
+            <ul>
+                <li>無限等比級数 $\sum_{n=1}^{\infty} ar^{n-1}$ が収束する条件は、$a=0$ または $|r|<1$ です。</li>
+                <li>$a \neq 0$ かつ $|r|<1$ のとき、収束する和は $S = \frac{a}{1-r}$ で与えられます。</li>
+                <li>$|r| \ge 1$ ($a \neq 0$) のときは発散します。</li>
+                <li>収束する無限級数は、定数倍や和・差について分解して計算することができます。
+                    <ul>
+                        <li>$\sum k a_n = k \sum a_n$</li>
+                        <li>$\sum (a_n \pm b_n) = \sum a_n \pm \sum b_n$</li>
+                    </ul>
+                </li>
+                <li>問題を解く際は、まず収束条件を確認し、収束する場合に和の公式を適用する手順が重要です。</li>
+            </ul>
+        </div>
+    </section>
+
+</body>
+</html>
