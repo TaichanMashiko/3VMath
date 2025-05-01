@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分数関数とそのグラフ</title> <!-- 単元名で置き換え -->
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important:not(blockquote) { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; } /* span用 */
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* 引用符スタイルの修正 (importantクラス適用時) */
+        blockquote.important {
+            border-left-color: #f44336; /* importantのボーダー色 */
+            background-color: #ffebee; /* importantの背景色 */
+            font-weight: bold; /* importantの太字 (必要に応じて) */
+            padding: 1em 1.5em;
+            margin-left: 0; /* 左インデントをリセット */
+            margin-right: 0;
+            position: relative; /* アイコン配置のため */
+            padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+         blockquote.important::before {
+             content: '⭐'; /* importantと同じアイコン */
+             position: absolute; left: 1em; top: 0.9em; font-size: 1.1em; width: 1.5em; text-align: center;
+         }
+         blockquote.important p {
+             margin-bottom: 0; /* blockquote内のpタグのマージン調整 */
+         }
+         blockquote.important strong {
+             font-weight: bold; /* blockquote内のstrongタグは太字を維持 */
+         }
+
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+    </style>
+</head>
+<body>
+    <h1>分数関数とそのグラフ</h1>
+    <p>授業日: 2025年5月1日</p>
+    <p>学習目標: 分数関数の定義、グラフの形状（双曲線）、漸近線、平行移動の関係を理解し、グラフを描けるようになる。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro">導入：反比例のグラフの復習</a>
+                    <ul>
+                        <li><a href="#hyperbola">双曲線と漸近線</a></li>
+                        <li><a href="#asymptote-reason">漸近線に触れない理由</a></li>
+                    </ul>
+                </li>
+                <li><a href="#definition">分数関数とは 📖</a></li>
+                <li><a href="#parallel-translation">グラフの平行移動（一般論）📜</a></li>
+                <li><a href="#general-fractional-function">一般的な分数関数のグラフ 📖</a>
+                    <ul>
+                        <li><a href="#formula-translation">平行移動による式の導出</a></li>
+                        <li><a href="#new-asymptotes">移動後の漸近線</a></li>
+                    </ul>
+                </li>
+                <li><a href="#example-1">例題1：分数関数のグラフ作成 ✍️</a>
+                    <ul>
+                        <li><a href="#steps-1">グラフ作成の手順</a></li>
+                    </ul>
+                </li>
+                 <li><a href="#tips-drawing">グラフ作成のポイント 💡</a></li>
+                 <li><a href="#practice-problems">練習問題 ✏️</a></li>
+                 <li><a href="#common-mistakes">間違いやすいポイント ⚠️</a></li>
+                 <li><a href="#check-quiz">理解度チェッククイズ ❓</a></li>
+                 <li><a href="#summary">授業全体の要約 🔖</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro">導入：反比例のグラフの復習</h2> <span class="importance">★★☆</span>
+    <p>中学校で学んだ反比例のグラフについて復習しましょう。例えば、\( y = \frac{k}{x} \) （\(k\) は定数）の形の式で表される関係です。</p>
+
+    <h3 id="hyperbola">双曲線と漸近線</h3> <span class="importance">★★☆</span>
+    <p>反比例のグラフは、<span class="tooltip" data-tooltip="互いに向き合った2つの曲線からなるグラフ。分数関数のグラフの典型的な形。">双曲線</span>と呼ばれる特徴的な形をしています。\(k\) の符号によってグラフの位置が変わります。</p>
+    <ul>
+        <li>\( k > 0 \) の場合：グラフは第1象限と第3象限に現れます。</li>
+        <li>\( k < 0 \) の場合：グラフは第2象限と第4象限に現れます。</li>
+    </ul>
+    <p>また、反比例のグラフは \(x\) 軸と \(y\) 軸に限りなく近づいていきますが、決して交わることはありません。このように、曲線が限りなく近づいていく直線のことを<span class="tooltip" data-tooltip="曲線が限りなく近づいていく直線のこと。分数関数では x=p, y=q の形の直線となる。">漸近線</span>と呼びます。</p>
+
+    <div class="definition">📖
+        <p><strong>漸近線 (ぜんきんせん):</strong> 曲線がある直線に限りなく近づくとき、その直線を曲線の漸近線といいます。</p>
+        <p>\( y = \frac{k}{x} \) のグラフの漸近線は、\(x\) 軸（式で表すと \(y=0\)）と \(y\) 軸（式で表すと \(x=0\)）です。</p>
+    </div>
+
+    <h3 id="asymptote-reason">漸近線に触れない理由</h3> <span class="importance">★☆☆</span>
+    <div class="supplement">➕
+        <p>なぜ \( y = \frac{k}{x} \) のグラフは \(x\) 軸や \(y\) 軸に触れないのでしょうか？</p>
+        <ul>
+            <li><strong>\(y\) 軸 (\(x=0\)) に触れない理由:</strong> 数学では、数を \(0\) で割ることは定義されていません。したがって、\( x=0 \) のときの \(y\) の値は存在しません。</li>
+            <li><strong>\(x\) 軸 (\(y=0\)) に触れない理由:</strong> \( y = \frac{k}{x} \) の式で \(y=0\) となるためには、\(k=0\) である必要があります。しかし、通常、反比例では \(k \neq 0\) なので、\(y\) が \(0\) になることはありません。</li>
+        </ul>
+        <p>このように、式の性質からグラフが漸近線に触れないことがわかります。</p>
+    </div>
+
+    <h2 id="definition">分数関数とは 📖</h2> <span class="importance">★★★</span>
+    <div class="definition">
+        <p><strong>分数関数 (ぶんすうかんすう):</strong> \( y = \frac{\text{（x の整式）}}{\text{（x の整式）}} \) の形で表される関数のうち、分母に定数でない整式（つまり \(x\) が含まれる式）を含むものを分数関数といいます。</p>
+        <p>例: \( y = \frac{1}{x} \), \( y = \frac{2x-1}{x+3} \), \( y = \frac{5}{x^2+1} \)</p>
+        <p class="caution">⚠️ 分母が定数の場合（例: \( y = \frac{x+1}{2} = \frac{1}{2}x + \frac{1}{2} \)）は、整関数（多項式関数）となり、分数関数とは区別されます。</p>
+    </div>
+    <p>特に、 \( y = \frac{k}{x} \) の形は、分数関数の最も基本的な形であり、反比例の関係を表します。</p>
+
+    <h2 id="parallel-translation">グラフの平行移動（一般論）📜</h2> <span class="importance">★★★</span>
+    <p>グラフを移動させる<span class="tooltip" data-tooltip="グラフを形を変えずに、特定方向に一定距離だけずらすこと。">平行移動</span>について、一般的なルールを復習します。これは分数関数に限らず、あらゆる関数に適用できる重要な考え方です。</p>
+    <div class="theorem">
+        <p><strong>グラフの平行移動:</strong> 関数 \( y = f(x) \) のグラフを</p>
+        <ul>
+            <li>\(x\) 軸方向に \(p\)</li>
+            <li>\(y\) 軸方向に \(q\)</li>
+        </ul>
+        <p>だけ平行移動したグラフを表す関数は、元の式の \(x\) を \(x-p\) に、\(y\) を \(y-q\) に置き換えることで得られます。</p>
+        <p>つまり、\( y - q = f(x - p) \) となります。</p>
+        <p>これを \(y\) について解くと、\( y = f(x - p) + q \) となります。</p>
+        <p class="important">⭐ \(x\) 方向に \(+p\) 移動させたい場合は \(x\) を \(x-p\) に、\(y\) 方向に \(+q\) 移動させたい場合は \(y\) を \(y-q\) に置き換える（または、移項して \(+q\) を右辺に加える）と覚えましょう。</p>
+    </div>
+
+    <h2 id="general-fractional-function">一般的な分数関数のグラフ 📖</h2> <span class="importance">★★★</span>
+    <p>反比例のグラフ \( y = \frac{k}{x} \) を平行移動することで、より一般的な分数関数のグラフを考えることができます。</p>
+
+    <h3 id="formula-translation">平行移動による式の導出</h3>
+    <p>基本形 \( y = \frac{k}{x} \) のグラフを、</p>
+    <ul>
+        <li>\(x\) 軸方向に \(p\)</li>
+        <li>\(y\) 軸方向に \(q\)</li>
+    </ul>
+    <p>だけ平行移動したグラフの式を求めてみましょう。</p>
+    <p>平行移動のルールに従い、元の式の \(x\) を \(x-p\) に、\(y\) を \(y-q\) に置き換えます。</p>
+    <p>\( y - q = \frac{k}{x - p} \)</p>
+    <p>これを \(y\) について解くと、</p>
+    <p class="definition">📖 \( y = \frac{k}{x - p} + q \)</p>
+    <p>となります。これが平行移動された分数関数の標準的な形です。</p>
+
+    <h3 id="new-asymptotes">移動後の漸近線</h3> <span class="importance">★★★</span>
+    <p>グラフを平行移動すると、漸近線も同じように移動します。</p>
+    <ul>
+        <li>元の漸近線: \(x=0\) (y軸), \(y=0\) (x軸)</li>
+        <li>\(x\) 軸方向に \(p\)、\(y\) 軸方向に \(q\) 平行移動</li>
+        <li>移動後の漸近線: \(x = p\), \(y = q\)</li>
+    </ul>
+    <div class="important">⭐
+        <p>分数関数 \( y = \frac{k}{x - p} + q \) のグラフは、</p>
+        <ul>
+            <li>基本形 \( y = \frac{k}{x} \) のグラフを \(x\) 軸方向に \(p\)、\(y\) 軸方向に \(q\) だけ平行移動した双曲線です。</li>
+            <li>漸近線は、直線 \( x = p \) と直線 \( y = q \) です。</li>
+        </ul>
+    </div>
+
+    <h2 id="example-1">例題1：分数関数のグラフ作成 ✍️</h2> <span class="importance">★★★</span>
+    <div class="example">
+        <p>関数 \( y = \frac{1}{x-2} + 3 \) のグラフを描き、その漸近線を求めなさい。<span class="difficulty">★★☆</span></p>
+        <h3 id="steps-1">グラフ作成の手順</h3>
+        <ol>
+            <li><strong>元のグラフを特定する:</strong>
+                このグラフは、基本形 \( y = \frac{1}{x} \) (\(k=1\)) のグラフを平行移動したものであると考えられます。
+            </li>
+            <li><strong>平行移動の量を読み取る:</strong>
+                式 \( y = \frac{1}{x-2} + 3 \) は、\( y = \frac{k}{x-p} + q \) の形をしています。
+                <ul>
+                    <li>\( x-p \) が \( x-2 \) に対応するので、\( p = 2 \) です。つまり、\(x\) 軸方向に \(+2\) 平行移動しています。</li>
+                    <li>\( +q \) が \( +3 \) に対応するので、\( q = 3 \) です。つまり、\(y\) 軸方向に \(+3\) 平行移動しています。</li>
+                </ul>
+            </li>
+            <li><strong>漸近線を求める:</strong>
+                元のグラフ \( y = \frac{1}{x} \) の漸近線は \( x=0, y=0 \) でした。
+                これを \(x\) 軸方向に \(+2\)、\(y\) 軸方向に \(+3\) 平行移動するので、新しい漸近線は
+                <ul>
+                    <li>\( x = 0 + 2 \implies x = 2 \)</li>
+                    <li>\( y = 0 + 3 \implies y = 3 \)</li>
+                </ul>
+                となります。
+            </li>
+            <li><strong>グラフを描く準備:</strong>
+                座標軸を描き、まず点線で漸近線 \( x=2 \) と \( y=3 \) を記入します。これが新しいグラフの基準線となります。
+            </li>
+            <li><strong>点をプロットする (任意):</strong>
+                元のグラフ \( y = \frac{1}{x} \) 上のいくつかの点（例：\( (1, 1), (-1, -1) \)）を平行移動させてプロットすると、グラフの形が捉えやすくなります。
+                <ul>
+                    <li>\( (1, 1) \to (1+2, 1+3) = (3, 4) \)</li>
+                    <li>\( (-1, -1) \to (-1+2, -1+3) = (1, 2) \)</li>
+                </ul>
+                これらの点を座標平面上にプロットします。
+            </li>
+            <li><strong>グラフを描画する:</strong>
+                新しい漸近線 \(x=2, y=3\) に沿うように、プロットした点を通る<span class="tooltip" data-tooltip="反比例のグラフ y=k/x の形状">双曲線</span>を描きます。\(k=1 > 0\) なので、漸近線で区切られた領域の右上と左下にグラフが現れます。
+            </li>
+        </ol>
+        <details>
+            <summary>解答</summary>
+            <p>漸近線は、直線 \( x = 2 \) と 直線 \( y = 3 \) です。</p>
+            <p>グラフは以下のようになります。（本来は手書きで描画）</p>
+            <img src="https://via.placeholder.com/400x300.png?text=Graph+of+y=1/(x-2)+%2B3" alt="y=1/(x-2)+3 のグラフのイメージ">
+            <p>（グラフの注意点：漸近線 \(x=2\) と \(y=3\) を点線で示す。曲線は漸近線に近づくように滑らかに描く。点(3, 4)と(1, 2)を通るように描く。）</p>
+        </details>
+    </div>
+
+    <div class="tips">💡
+    <h2 id="tips-drawing">グラフ作成のポイント</h2> <span class="importance">★★☆</span>
+        <ul>
+            <li><strong>漸近線を先に描く:</strong> 分数関数のグラフを描く際は、まず漸近線 \(x=p, y=q\) を点線で描くことが最も重要です。これがグラフの骨組みとなります。</li>
+            <li><strong>基本形を意識する:</strong> 元のグラフ \( y = \frac{k}{x} \) がどの象限にあるか（\(k\) の符号）を確認し、移動後の漸近線に対して同じ相対的な位置に双曲線を描きます。</li>
+            <li><strong>いくつかの点を計算する:</strong> 漸近線の近くや、軸との交点（計算できれば）など、いくつかの具体的な点の座標を計算してプロットすると、より正確なグラフが描けます。例えば、\(x=3\) のとき \(y = \frac{1}{3-2}+3 = 4\)、\(x=1\) のとき \(y = \frac{1}{1-2}+3 = 2\) などを計算します。</li>
+            <li><strong>滑らかに描く:</strong> 双曲線は滑らかな曲線です。点を直線で結ばず、漸近線に沿ってカーブを描くようにしましょう。</li>
+        </ul>
+    </div>
+
+    <div class="practice-problems">✏️
+    <h2 id="practice-problems">練習問題</h2>
+    <p>以下の分数関数のグラフを描き、漸近線を求めなさい。</p>
+    <ol>
+        <li>\( y = \frac{1}{x+1} - 2 \) <span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+            <details>
+                <summary>解答と解説</summary>
+                <p>元のグラフは \( y = \frac{1}{x} \) です。</p>
+                <p>\(x+1 = x - (-1)\) と見なせるので、\(x\) 軸方向に \(-1\) 平行移動。</p>
+                <p>\(-2\) が加えられているので、\(y\) 軸方向に \(-2\) 平行移動。</p>
+                <p>漸近線: 元の \(x=0, y=0\) が移動して、\( x = -1 \), \( y = -2 \) となります。</p>
+                <p>グラフ: 漸近線 \(x=-1, y=-2\) を基準として、右上と左下に双曲線を描きます。例えば、点 \( (0, -1) \) や \( (-2, -3) \) を通ります。</p>
+                <img src="https://via.placeholder.com/400x300.png?text=Graph+of+y=1/(x+1)-2" alt="y=1/(x+1)-2 のグラフのイメージ">
+             </details>
+        </li>
+        <li>\( y = -\frac{2}{x-1} + 1 \) <span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+             <details>
+                <summary>解答と解説</summary>
+                <p>元のグラフは \( y = -\frac{2}{x} \) です（\(k=-2 < 0\)）。</p>
+                 <p>\(x-1\) なので、\(x\) 軸方向に \(+1\) 平行移動。</p>
+                 <p>\(+1\) が加えられているので、\(y\) 軸方向に \(+1\) 平行移動。</p>
+                 <p>漸近線: \( x = 1 \), \( y = 1 \) となります。</p>
+                 <p>グラフ: 元のグラフが \(k<0\) なので、左上と右下に現れます。漸近線 \(x=1, y=1\) を基準として、左上と右下に双曲線を描きます。例えば、点 \( (0, 3) \) や \( (2, -1) \) を通ります。</p>
+                 <img src="https://via.placeholder.com/400x300.png?text=Graph+of+y=-2/(x-1)+1" alt="y=-2/(x-1)+1 のグラフのイメージ">
+            </details>
+        </li>
+    </ol>
+    </div>
+
+     <div class="caution">⚠️
+    <h2 id="common-mistakes">間違いやすいポイント</h2> <span class="importance">★★☆</span>
+    <ul>
+        <li><strong>平行移動量の符号ミス:</strong> \( y = \frac{k}{x-p} + q \) の形を見たときに、\(x\) 軸方向の移動量は \(+p\) であることに注意が必要です。\(x-p\) の \(p\) の符号をそのまま使って \(-p\) 移動と間違えないようにしましょう。(\(y\) 軸方向は \(+q\) のままです)</li>
+        <li><strong>漸近線の式の書き間違い:</strong> \(x\) 軸に平行な漸近線は \(y=q\)、\(y\) 軸に平行な漸近線は \(x=p\) です。これを逆に書かないようにしましょう。</li>
+        <li><strong>kの符号の見落とし:</strong> \( y = \frac{k}{x} \) の \(k\) が正か負かでグラフの存在する象限が変わります。平行移動後も、新しい漸近線を基準とした相対的な位置関係は同じです。\(k\) の符号をしっかり確認しましょう。</li>
+        <li><strong>グラフの形状:</strong> 双曲線は必ず漸近線に近づいていきます。途中で曲がったり、漸近線から離れたりしないように注意しましょう。</li>
+    </ul>
+    </div>
+
+     <div class="quiz">❓
+    <h2 id="check-quiz">理解度チェッククイズ</h2>
+    <ol>
+        <li>
+            関数 \( y = \frac{3}{x+4} - 5 \) の漸近線の方程式はどれですか？
+            <ol type="a">
+                <li>\( x = 4, y = -5 \)</li>
+                <li>\( x = -4, y = -5 \)</li>
+                <li>\( x = -4, y = 5 \)</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は b です。</p>
+                <p>式は \( y = \frac{3}{x-(-4)} + (-5) \) と見ることができるので、\(p=-4, q=-5\) です。よって漸近線は \(x=-4, y=-5\) となります。</p>
+            </details>
+        </li>
+        <li>
+            関数 \( y = \frac{k}{x} \) のグラフを \(x\) 軸方向に \( -2 \)、\(y\) 軸方向に \( +1 \) 平行移動したグラフの式はどれですか？
+            <ol type="a">
+                <li>\( y = \frac{k}{x-2} + 1 \)</li>
+                <li>\( y = \frac{k}{x+2} - 1 \)</li>
+                <li>\( y = \frac{k}{x+2} + 1 \)</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は c です。</p>
+                <p>\(x\) 軸方向に \(-2\) 移動なので、\(x\) を \(x-(-2) = x+2\) に置き換えます。\(y\) 軸方向に \(+1\) 移動なので、\(y\) を \(y-1\) に置き換えるか、右辺に \(+1\) を加えます。よって \( y = \frac{k}{x+2} + 1 \) となります。</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <h2 id="summary">授業全体の要約 🔖</h2> <span class="importance">★★★</span>
+    <div class="summary">
+        <p>本日の授業では、分数関数とそのグラフについて学びました。</p>
+        <ul>
+            <li><strong>分数関数:</strong> \( y = \frac{\text{整式}}{\text{整式}} \) （分母は定数でない）の形で表される関数です。基本形は反比例 \( y = \frac{k}{x} \) です。</li>
+            <li><strong>基本形のグラフ:</strong> 反比例のグラフは<span class="tooltip" data-tooltip="分数関数のグラフの形">双曲線</span>となり、\(x\) 軸 (\(y=0\)) と \(y\) 軸 (\(x=0\)) を<span class="tooltip" data-tooltip="曲線が限りなく近づく直線">漸近線</span>に持ちます。漸近線に触れないのは、分母が0になることや \(y=0\) になることがないためです。</li>
+            <li><strong>平行移動:</strong> 関数 \( y=f(x) \) のグラフを \(x\) 軸方向に \(p\)、\(y\) 軸方向に \(q\) 移動すると、式は \( y = f(x-p) + q \) となります。</li>
+            <li><strong>一般の分数関数:</strong> \( y = \frac{k}{x-p} + q \) は、\( y = \frac{k}{x} \) を \(x\) 軸方向に \(p\)、\(y\) 軸方向に \(q\) 平行移動したグラフです。漸近線も同様に移動し、\( x=p, y=q \) となります。</li>
+            <li><strong>グラフの描き方:</strong> ①元のグラフを特定、②平行移動量を把握、③漸近線を描画、④いくつかの点をプロット（任意）、⑤漸近線に沿って双曲線を描画、という手順で行います。</li>
+        </ul>
+        <p>分数関数のグラフを正確に描くためには、漸近線の理解と平行移動のルールの適用が重要です。次回までに練習問題に取り組んでおきましょう。</p>
+    </div>
+
+</body>
+</html>
