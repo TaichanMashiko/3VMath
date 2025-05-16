@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[単元名 Placeholder]</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+    </style>
+</head>
+<body>
+    <h1>[単元名 Placeholder] - 分数関数とそのグラフ</h1>
+    <p>授業日: 2025年5月16日</p>
+    <p>学習目標:</p>
+    <ul>
+        <li>分数関数の標準形を理解し、グラフを描けるようになる。</li>
+        <li>分数関数の漸近線の意味と求め方を理解する。</li>
+        <li>与えられた分数関数を標準形に変形できるようになる。</li>
+    </ul>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro-review">導入と前回の復習</a>
+                    <ul>
+                        <li><a href="#basic-inverse-proportion">反比例のグラフの基本（復習）</a></li>
+                        <li><a href="#standard-form-parallel-translation">分数関数の標準形とグラフの平行移動</a></li>
+                        <li><a href="#asymptotes">漸近線</a></li>
+                        <li><a href="#graph-drawing-overview">グラフの書き方の概略</a></li>
+                    </ul>
+                </li>
+                <li><a href="#understanding-check-1">理解度チェッククイズ 1</a></li>
+                <li><a href="#graphing-rational-functions">分数関数のグラフ作成</a>
+                    <ul>
+                        <li><a href="#importance-of-transformation">基本形への変形の重要性</a></li>
+                        <li><a href="#formula-guide-transformation">分数関数を標準形に変形する手順ガイド</a></li>
+                        <li><a href="#example1-transformation">例題1: 分数関数の式変形</a></li>
+                        <li><a href="#common-mistakes-transformation">間違いやすいポイント: 式変形における符号と計算</a></li>
+                        <li><a href="#practice1-transformation">練習問題1: 式変形</a></li>
+                        <li><a href="#practice2-transformation">練習問題2: 式変形</a></li>
+                        <li><a href="#practice3-transformation">練習問題3: 式変形</a></li>
+                        <li><a href="#understanding-check-2">理解度チェッククイズ 2</a></li>
+                        <li><a href="#example2-graphing">例題2: 分数関数のグラフ作成</a></li>
+                    </ul>
+                </li>
+                <li><a href="#practice-and-summary">演習とまとめ</a>
+                    <ul>
+                        <li><a href="#tips-plotting-points">グラフ上の点の取り方のTips</a></li>
+                        <li><a href="#summary-today">本日のまとめ</a></li>
+                    </ul>
+                </li>
+                <li><a href="#standard-practice-problems">標準的な練習問題（追加生成）</a></li>
+                <li><a href="#advanced-practice-problems">発展的な練習問題（追加生成）</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro-review">導入と前回の復習</h2>
+    <p>前回の授業では、分数関数について学習しました。これは、いわば高校版の反比例のグラフとも言えるものです。今回は、その内容を復習しつつ、さらに進んだグラフの書き方について学んでいきましょう。</p>
+
+    <h3 id="basic-inverse-proportion">反比例のグラフの基本（復習）</h3>
+    <div class="definition">
+      📖 <span class="importance">★★★</span>
+      <p>小中学校で学習する反比例のグラフは、一般的に \(y = \frac{k}{x}\) (kは定数, \(k \neq 0\)) の形で表されます。このグラフの形状を<span class="tooltip" data-tooltip="双曲線：2つの曲線からなる図形。反比例のグラフが代表例。">双曲線</span>といいます。</p>
+      <p>例えば、\(k > 0\) の場合、グラフは第1象限と第3象限に、\(k < 0\) の場合は第2象限と第4象限に描かれます。</p>
+    </div>
+
+    <h3 id="standard-form-parallel-translation">分数関数の標準形とグラフの平行移動</h3>
+    <div class="definition">
+      📖 <span class="importance">★★★</span>
+      <p>高校で学習する分数関数は、基本形（標準形）として \(y = \frac{k}{x-p} + q\) (k, p, qは定数, \(k \neq 0\)) の形で表されます。</p>
+      <p>このグラフは、最も基本的な反比例のグラフ \(y = \frac{k}{x}\) を、<span class="tooltip" data-tooltip="x軸方向にp、y軸方向にqだけグラフ全体をずらすこと。">平行移動</span>によって、x軸方向に \(p\)、y軸方向に \(q\) だけ移動したものです。</p>
+    </div>
+    <div class="important">
+        ⭐ <span class="importance">★★★</span>
+        <p>この \(p\) と \(q\) の値が、グラフの位置を決定する上で非常に重要になります。</p>
+        <ul>
+            <li>\(x-p\) の \(p\): x軸方向の移動量。符号に注意が必要です。\(x-p\) ならば \(+p\) 方向へ移動します。</li>
+            <li>\(+q\) の \(q\): y軸方向の移動量。こちらは見たままの符号で移動します。</li>
+        </ul>
+    </div>
+
+    <h3 id="asymptotes">漸近線</h3>
+    <div class="definition">
+      📖 <span class="importance">★★★</span>
+      <p><span class="tooltip" data-tooltip="曲線がある直線に限りなく近づくとき、その直線を曲線の漸近線という。">漸近線</span>とは、関数のグラフが限りなく近づいていく直線のことです。分数関数の場合、グラフ自身が漸近線と交わることはありません。</p>
+      <p>分数関数 \(y = \frac{k}{x-p} + q\) の漸近線は、以下の2本の直線です。</p>
+      <ul>
+        <li>直線 \(x = p\) （y軸に平行な直線）</li>
+        <li>直線 \(y = q\) （x軸に平行な直線）</li>
+      </ul>
+    </div>
+    <div class="important">
+      ⭐ <span class="importance">★★★</span>
+      <p>分数関数のグラフを描く上で、漸近線を正しく求めることは非常に重要です。漸近線を基準にグラフの概形が決まります。</p>
+      <p>漸近線は、分母が0になるxの値 (\(x-p=0 \Rightarrow x=p\)) と、xが非常に大きい（または小さい）ときにyが近づく値 (\(y \approx q\)) に対応します。</p>
+    </div>
+    <div class="supplement">
+        ➕ <h4>補足: 漸近線の意味</h4>
+        <p>漸近線は、グラフが「無限の彼方でどのような直線に近づいていくか」を示しています。分数関数の場合、\(x\) が \(p\) に近づくほど \(|y|\) は無限に大きくなり、\(|x|\) が無限に大きくなるほど \(y\) は \(q\) に近づきます。</p>
+    </div>
+
+    <h3 id="graph-drawing-overview">グラフの書き方の概略</h3>
+    <p>分数関数 \(y = \frac{k}{x-p} + q\) のグラフを描く手順は以下の通りです。</p>
+    <ol>
+        <li>まず、基準となる反比例のグラフ \(y = \frac{k}{x}\) をイメージします。</li>
+        <li>次に、漸近線 \(x=p\) と \(y=q\) を座標平面上に描きます。（これらが新しい「仮の座標軸」の役割を果たします）</li>
+        <li>最後に、\(y = \frac{k}{x}\) のグラフを、この新しい漸近線に合わせて平行移動させて描きます。\(k\) の符号に注意して、双曲線がどの象限に位置するかを判断します。</li>
+    </ol>
+    <p>具体的には、元の \(y=\frac{k}{x}\) のグラフ（漸近線はx軸とy軸）を、x軸方向に \(p\)、y軸方向に \(q\) だけ平行移動させると、新しいグラフの漸近線も同様に \(x=p, y=q\) へと移動します。この新しい漸近線を基準として、\(y=\frac{k}{x}\) と同じ形の双曲線を描けばよいのです。</p>
+
+    <div class="quiz">
+        ❓ <h4 id="understanding-check-1">理解度チェッククイズ 1</h4>
+        <ol>
+            <li>
+                <p>分数関数 \(y = \frac{3}{x-2} + 5\) の漸近線の方程式として正しいものはどれですか？</p>
+                <ol type="A">
+                    <li>\(x=2, y=-5\)</li>
+                    <li>\(x=-2, y=5\)</li>
+                    <li>\(x=2, y=5\)</li>
+                    <li>\(x=5, y=2\)</li>
+                </ol>
+                <details>
+                    <summary>答えと解説</summary>
+                    <p><strong>答え:</strong> C. \(x=2, y=5\)</p>
+                    <p><strong>解説:</strong> 分数関数 \(y = \frac{k}{x-p} + q\) の漸近線は \(x=p\) と \(y=q\) です。この問題では \(p=2, q=5\) なので、漸近線は \(x=2, y=5\) となります。</p>
+                </details>
+            </li>
+            <li>
+                <p>関数 \(y = \frac{1}{x}\) のグラフをx軸方向に \(-3\)、y軸方向に \(4\) だけ平行移動したグラフを表す式はどれですか？</p>
+                <ol type="A">
+                    <li>\(y = \frac{1}{x-3} + 4\)</li>
+                    <li>\(y = \frac{1}{x+3} + 4\)</li>
+                    <li>\(y = \frac{1}{x-4} - 3\)</li>
+                    <li>\(y = \frac{1}{x+4} - 3\)</li>
+                </ol>
+                <details>
+                    <summary>答えと解説</summary>
+                    <p><strong>答え:</strong> B. \(y = \frac{1}{x+3} + 4\)</p>
+                    <p><strong>解説:</strong> x軸方向に \(-3\) 移動するので、\(x\) は \(x-(-3) = x+3\) に置き換わります。y軸方向に \(4\) 移動するので、式の最後に \(+4\) が付きます。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <h2 id="graphing-rational-functions">分数関数のグラフ作成</h2>
+    <h3 id="importance-of-transformation">基本形への変形の重要性</h3>
+    <div class="important">
+      ⭐ <span class="importance">★★★</span>
+      <p>分数関数のグラフを正確に描くためには、与えられた式をまず基本形（標準形） \(y = \frac{k}{x-p} + q\) に変形することが不可欠です。この形に変形することで、漸近線の方程式 (\(x=p, y=q\)) や、どの反比例のグラフ (\(y=\frac{k}{x}\)) をどれだけ平行移動したかが明確になります。</p>
+      <p>例えば、一次関数を \(y=ax+b\) の形に、二次関数を \(y=a(x-p)^2+q\) の形（平方完成）に変形するのと同じように、分数関数にもグラフを描きやすい「標準形」があるのです。この形に変形できていない状態では、グラフの正確な位置や形を把握することは困難です。</p>
+    </div>
+
+    <div class="formula-guide" id="formula-guide-transformation">
+      🧭 <h4>分数関数を標準形 \(y = \frac{k}{x-p} + q\) に変形する手順ガイド</h4>
+      <p>分数関数が \(y = \frac{ax+b}{cx+d}\) のような形で与えられた場合（特にここでは \(c=1\) の場合として \(y = \frac{ax+b}{x+d'}\) を考えます）、以下の手順で標準形に変形します。</p>
+      <ul>
+          <li>
+              <strong>目標設定:</strong>
+              <p>分子を「(分母の定数倍) + (余り)」の形、つまり \(ax+b = a(x+d') + (\text{余り})\) の形に変形することを目指します。</p>
+          </li>
+          <li>
+              <strong>方法: 分子に分母の形を作り出す</strong>
+              <p>分子に分母の式と同じ形を無理やり作り出し、元の分子と等しくなるように定数項を調整します。</p>
+              <p><strong>例:</strong> \(y = \frac{3x+1}{x-2}\) の場合</p>
+              <p>
+                  分子の \(3x+1\) に、分母の \((x-2)\) を含む形を作ります。まず、\(3x\) を作るために \(3(x-2)\) を考えます。
+                  \[3(x-2) = 3x - 6\]
+                  元の分子は \(3x+1\) なので、\(-6\) を \(+1\) にするためには \(+7\) する必要があります。
+                  つまり、
+                  \[3x+1 = 3(x-2) + 7\]
+                  と変形できます。
+              </p>
+          </li>
+          <li>
+              <strong>分離:</strong>
+              <p>変形した分子を使い、\(\frac{A+B}{C} = \frac{A}{C} + \frac{B}{C}\) の性質を利用して分数を2つの部分に分けます。</p>
+              <p>
+                  上記の例では:
+                  \[y = \frac{3(x-2) + 7}{x-2} = \frac{3(x-2)}{x-2} + \frac{7}{x-2} = 3 + \frac{7}{x-2}\]
+                  これを並び替えて、標準形 \(y = \frac{7}{x-2} + 3\) を得ます。
+              </p>
+              <p>この形から、\(k=7, p=2, q=3\) であることが分かります。</p>
+          </li>
+      </ul>
+    </div>
+
+    <h3 id="example1-transformation">例題1: 分数関数の式変形 ✍️ <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h3>
+    <p>関数 \(y = \frac{3x+1}{x-2}\) を \(y = \frac{k}{x-p} + q\) の形に変形しなさい。</p>
+    <details>
+        <summary>解答・解説</summary>
+        <p>与えられた関数は \(y = \frac{3x+1}{x-2}\) です。</p>
+        <p>分子 \(3x+1\) を、分母 \((x-2)\) を使って表すことを考えます。</p>
+        <p>まず、\(3x\) の部分を作るために \(3(x-2)\) とします。
+        \[3(x-2) = 3x - 6\]
+        元の分子は \(3x+1\) です。\(3x-6\) を \(3x+1\) にするためには、\((-6)\) に \(7\) を加える必要があります (\(-6+7=1\))。</p>
+        <p>したがって、分子は次のように変形できます。
+        \[3x+1 = 3(x-2) + 7\]
+        これを用いて元の関数を書き換えると、
+        \[y = \frac{3(x-2) + 7}{x-2}\]
+        ここで、分数を2つの部分に分けます。
+        \[y = \frac{3(x-2)}{x-2} + \frac{7}{x-2}\]
+        \[y = 3 + \frac{7}{x-2}\]
+        最後に、標準的な形に並び替えます。
+        \[y = \frac{7}{x-2} + 3\]
+        この形から、\(k=7, p=2, q=3\) であることがわかります。</p>
+    </details>
+
+    <div class="caution" id="common-mistakes-transformation">
+      ⚠️ <h4>間違いやすいポイント: 式変形における符号と計算</h4>
+      <p><span class="importance">★★☆</span> 式変形の過程では、特に分子の定数項を調整する際に計算ミスや符号ミスが起こりやすいです。</p>
+      <ul>
+        <li><strong>例:</strong> \(y = \frac{3x+1}{x-2}\) を変形する際に、\(3x+1 = 3(x-2) + 7\) とすべきところを、\(3(x-2)+1\) のように、調整項の計算を誤ってしまうミス。正しくは \(3(x-2)\) を展開すると \(3x-6\) となるため、元の \(3x+1\) に合わせるには \(+7\) が必要です。</li>
+        <li><strong>対策:</strong> 変形後は必ず展開して元の分子と一致するか確認する習慣をつけましょう。 \(3(x-2)+7 = 3x-6+7 = 3x+1\) (OK)</li>
+        <li><strong>符号の注意:</strong> 分母が \(x+p\) の形の場合、標準形は \(y=\frac{k}{x-(-p)}+q\) となり、x軸方向の平行移動量は \(-p\) です。符号の扱いに注意してください。</li>
+      </ul>
+    </div>
+
+    <h3 id="practice1-transformation">練習問題1: 式変形 ✏️ <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h3>
+    <p>関数 \(y = \frac{2x-1}{x-1}\) を \(y = \frac{k}{x-p} + q\) の形に変形しなさい。</p>
+    <details>
+        <summary>解答・解説</summary>
+        <p>与えられた関数は \(y = \frac{2x-1}{x-1}\) です。</p>
+        <p>分子 \(2x-1\) を、分母 \((x-1)\) を使って表します。</p>
+        <p>
+        \(2x-1 = 2(x-1) + 2 - 1 = 2(x-1) + 1\)
+        </p>
+        <p>よって、
+        \[y = \frac{2(x-1) + 1}{x-1} = \frac{2(x-1)}{x-1} + \frac{1}{x-1} = 2 + \frac{1}{x-1}\]
+        標準形に並び替えると、
+        \[y = \frac{1}{x-1} + 2\]
+        この形から、\(k=1, p=1, q=2\) です。</p>
+    </details>
+
+    <h3 id="practice2-transformation">練習問題2: 式変形 ✏️ <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></h3>
+    <p>関数 \(y = \frac{3x+2}{x+1}\) を \(y = \frac{k}{x-p} + q\) の形に変形しなさい。</p>
+    <details>
+        <summary>解答・解説</summary>
+        <p>与えられた関数は \(y = \frac{3x+2}{x+1}\) です。</p>
+        <p>分子 \(3x+2\) を、分母 \((x+1)\) を使って表します。</p>
+        <p>
+        \(3x+2 = 3(x+1) - 3 + 2 = 3(x+1) - 1\)
+        </p>
+        <p>よって、
+        \[y = \frac{3(x+1) - 1}{x+1} = \frac{3(x+1)}{x+1} + \frac{-1}{x+1} = 3 + \frac{-1}{x+1}\]
+        標準形に並び替えると、
+        \[y = \frac{-1}{x+1} + 3\]
+        この形から、\(k=-1, p=-1, q=3\) です。( \(x+1 = x-(-1)\) と考える点に注意)</p>
+    </details>
+
+    <h3 id="practice3-transformation">練習問題3: 式変形 ✏️ <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></h3>
+    <p>関数 \(y = \frac{-x+1}{x-2}\) を \(y = \frac{k}{x-p} + q\) の形に変形しなさい。</p>
+    <details>
+        <summary>解答・解説</summary>
+        <p>与えられた関数は \(y = \frac{-x+1}{x-2}\) です。</p>
+        <p>分子 \(-x+1\) を、分母 \((x-2)\) を使って表します。</p>
+        <p>
+        \(-x+1 = -(x-2) - 2 + 1 = -(x-2) - 1\)
+        </p>
+        <p>よって、
+        \[y = \frac{-(x-2) - 1}{x-2} = \frac{-(x-2)}{x-2} + \frac{-1}{x-2} = -1 + \frac{-1}{x-2}\]
+        標準形に並び替えると、
+        \[y = \frac{-1}{x-2} - 1\]
+        この形から、\(k=-1, p=2, q=-1\) です。</p>
+    </details>
+
+    <div class="quiz">
+        ❓ <h4 id="understanding-check-2">理解度チェッククイズ 2</h4>
+        <ol>
+            <li>
+                <p>関数 \(y = \frac{4x+3}{x+1}\) を標準形 \(y = \frac{k}{x-p} + q\) に変形したとき、\(k, p, q\) の値の組み合わせとして正しいものはどれですか？</p>
+                <ol type="A">
+                    <li>\(k=3, p=1, q=4\)</li>
+                    <li>\(k=-1, p=-1, q=4\)</li>
+                    <li>\(k=1, p=1, q=4\)</li>
+                    <li>\(k=4, p=-1, q=-1\)</li>
+                </ol>
+                <details>
+                    <summary>答えと解説</summary>
+                    <p><strong>答え:</strong> B. \(k=-1, p=-1, q=4\)</p>
+                    <p><strong>解説:</strong> \(4x+3 = 4(x+1) - 4 + 3 = 4(x+1) - 1\)。</p>
+                    <p>よって、\(y = \frac{4(x+1)-1}{x+1} = 4 + \frac{-1}{x+1} = \frac{-1}{x-(-1)} + 4\)。</p>
+                    <p>したがって、\(k=-1, p=-1, q=4\)。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <h3 id="example2-graphing">例題2: 分数関数のグラフ作成 ✍️ <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h3>
+    <p>関数 \(y = \frac{2x-5}{x-3}\) のグラフを描き、その漸近線を求めなさい。</p>
+    <details>
+        <summary>解答・解説</summary>
+        <p><strong>1. 標準形への変形:</strong></p>
+        <p>
+        \(2x-5 = 2(x-3) + 6 - 5 = 2(x-3) + 1\)
+        </p>
+        <p>
+        よって、\(y = \frac{2(x-3)+1}{x-3} = \frac{1}{x-3} + 2\)
+        </p>
+        <p>この形から、\(k=1, p=3, q=2\) となります。</p>
+
+        <p><strong>2. 基本となるグラフの確認:</strong></p>
+        <p>基本となるグラフは \(y = \frac{1}{x}\) です。</p>
+
+        <p><strong>3. 平行移動の確認:</strong></p>
+        <p>\(y = \frac{1}{x}\) のグラフを、x軸方向に \(3\)、y軸方向に \(2\) だけ平行移動したものです。</p>
+
+        <p><strong>4. 漸近線の導出:</strong></p>
+        <p>漸近線は \(x=p\) と \(y=q\) なので、</p>
+        <p>漸近線: \(x=3\), \(y=2\)</p>
+
+        <p><strong>5. グラフの描画:</strong></p>
+        <ol>
+            <li>座標平面に、まず漸近線 \(x=3\) (y軸に平行な直線) と \(y=2\) (x軸に平行な直線) を点線などで描きます。</li>
+            <li>\(k=1 > 0\) なので、基本のグラフ \(y=\frac{1}{x}\) は漸近線で区切られた4つの領域のうち、右上と左下の部分に双曲線として描かれます。</li>
+            <li>より正確に描くために、いくつかグラフが通る点を求めます。
+                <ul>
+                    <li>分母が \(1\) になる時: \(x-3=1 \Rightarrow x=4\)。このとき \(y = \frac{1}{1} + 2 = 3\)。点(4, 3)を通ります。</li>
+                    <li>分母が \(-1\) になる時: \(x-3=-1 \Rightarrow x=2\)。このとき \(y = \frac{1}{-1} + 2 = 1\)。点(2, 1)を通ります。</li>
+                    <li>y切片 (x=0のとき): \(y = \frac{2(0)-5}{0-3} = \frac{-5}{-3} = \frac{5}{3}\)。点(0, \(\frac{5}{3}\))を通ります。</li>
+                    <li>x切片 (y=0のとき): \(\frac{2x-5}{x-3} = 0 \Rightarrow 2x-5=0 \Rightarrow x=\frac{5}{2}\)。点(\(\frac{5}{2}\), 0)を通ります。</li>
+                </ul>
+            </li>
+            <li>これらの点と漸近線を手がかりに、滑らかな双曲線を描きます。</li>
+        </ol>
+        <p>(注: HTMLではグラフの図示が難しいため、説明のみとします。実際のノートでは図を描いてください)</p>
+    </details>
+
+    <h2 id="practice-and-summary">演習とまとめ</h2>
+    <p>ここまでの内容を踏まえて、各自で練習問題に取り組んでみましょう。特に、式変形と漸近線の把握が重要です。</p>
+
+    <div class="tips" id="tips-plotting-points">
+      💡 <h4>グラフ上の点の取り方のTips</h4>
+      <p><span class="importance">★★☆</span> 分数関数のグラフをより正確に描くためには、いくつかの通過点をプロットすると良いでしょう。以下の点を考えると便利です。</p>
+      <ul>
+          <li><strong>y切片:</strong> \(x=0\) を代入してyの値を求めます。ただし、\(x=0\) が定義域に含まれない（漸近線である）場合はy切片は存在しません。</li>
+          <li><strong>x切片:</strong> \(y=0\) とおいてxの値を求めます。これは、元の分数の形の分子が0になるxの値を求めることと同じです。ただし、\(y=0\) が値域に含まれない（漸近線である）場合はx切片は存在しません。</li>
+          <li><strong>分母が \(\pm 1\) になる点:</strong> 標準形 \(y = \frac{k}{x-p} + q\) において、分母 \((x-p)\) が \(1\) や \(-1\) になるようなxの値を見つけると、計算が簡単になります。
+              <ul>
+                  <li>\(x-p=1 \Rightarrow x=p+1\) のとき、\(y = k+q\)</li>
+                  <li>\(x-p=-1 \Rightarrow x=p-1\) のとき、\(y = -k+q\)</li>
+              </ul>
+              これらの点は、漸近線の交点 \((p,q)\) から見て、左右に1だけ進んだ点のy座標を与えるため、グラフの曲がり具合を把握するのに役立ちます。
+          </li>
+      </ul>
+    </div>
+
+    <div class="summary" id="summary-today">
+      🔖 <h3>本日のまとめ</h3>
+      <ul>
+          <li>分数関数 \(y = \frac{k}{x-p} + q\) のグラフは、\(y = \frac{k}{x}\) のグラフをx軸方向に \(p\)、y軸方向に \(q\) だけ平行移動した双曲線です。</li>
+          <li>漸近線は \(x=p\) と \(y=q\) です。</li>
+          <li>与えられた分数関数 \(y = \frac{ax+b}{cx+d}\) は、まず標準形 \(y = \frac{k}{x-p} + q\) に変形することでグラフが描きやすくなります。</li>
+          <li>式変形では、分子に分母の形を作り出すのがポイントです。具体的には、分子を「(分母の定数倍)＋(余り)」の形にします。</li>
+          <li>グラフ上の具体的な点をいくつか求めると（y切片、x切片、分母が±1になる点など）、より正確なグラフが描けます。</li>
+          <li>グラフの共有地の問題は、連立方程式で解くことができます。解の個数はグラフの交点の個数に対応します。</li>
+      </ul>
+    </div>
+
+    <div class="practice-problems" id="standard-practice-problems">
+      ✏️ <h3>標準的な練習問題（追加生成）</h3>
+      <p>以下の関数のグラフを描き、その漸近線の方程式を求めなさい。</p>
+      <ol>
+          <li>
+              \(y = \frac{x+3}{x+1}\) <span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+              <details>
+                  <summary>解答・解説</summary>
+                  <p><strong>式変形:</strong></p>
+                  <p>
+                  \(y = \frac{(x+1)+2}{x+1} = \frac{2}{x+1} + 1\)
+                  </p>
+                  <p>したがって、\(k=2, p=-1, q=1\)</p>
+                  <p><strong>基本のグラフ:</strong> \(y = \frac{2}{x}\)</p>
+                  <p><strong>平行移動:</strong> x軸方向に \(-1\)、y軸方向に \(1\) だけ平行移動。</p>
+                  <p><strong>漸近線:</strong> \(x = -1\), \(y = 1\)</p>
+                  <p><strong>グラフの通過点:</strong></p>
+                  <ul>
+                      <li>分母が1になる時: \(x+1=1 \Rightarrow x=0\)。このとき \(y = \frac{2}{1} + 1 = 3\)。点(0, 3)を通る (y切片)。</li>
+                      <li>分母が-1になる時: \(x+1=-1 \Rightarrow x=-2\)。このとき \(y = \frac{2}{-1} + 1 = -1\)。点(-2, -1)を通る。</li>
+                      <li>分子が0になる時 (x切片): \(x+3=0 \Rightarrow x=-3\)。点(-3, 0)を通る。</li>
+                  </ul>
+                  <p>(グラフの図は省略しますが、上記の情報を元に漸近線を引き、指定された点を通る双曲線を描きます。\(k=2>0\)なので、漸近線で区切られた領域の右上と左下にグラフが存在します。)</p>
+              </details>
+          </li>
+          <li>
+              \(y = \frac{4x-5}{2x-1}\) <span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+              <details>
+                  <summary>解答・解説</summary>
+                  <p><strong>式変形:</strong></p>
+                  <p>まず、分母のxの係数を1にするため、分母分子を2で割ります。（または、分子を \(2(2x-1)\) の形で作ることを考えます）</p>
+                  <p>
+                  \(y = \frac{2(2x-1) - 3}{2x-1} = \frac{-3}{2x-1} + 2 = \frac{-3}{2(x-\frac{1}{2})} + 2 = \frac{-\frac{3}{2}}{x-\frac{1}{2}} + 2\)
+                  </p>
+                  <p>したがって、\(k=-\frac{3}{2}, p=\frac{1}{2}, q=2\)</p>
+                  <p><strong>基本のグラフ:</strong> \(y = \frac{-\frac{3}{2}}{x}\)</p>
+                  <p><strong>平行移動:</strong> x軸方向に \(\frac{1}{2}\)、y軸方向に \(2\) だけ平行移動。</p>
+                  <p><strong>漸近線:</strong> \(x = \frac{1}{2}\), \(y = 2\)</p>
+                  <p><strong>グラフの通過点:</strong></p>
+                  <ul>
+                      <li>y切片 (x=0のとき): \(y = \frac{-5}{-1} = 5\)。点(0, 5)を通る。</li>
+                      <li>x切片 (y=0のとき): \(4x-5=0 \Rightarrow x=\frac{5}{4}\)。点(\(\frac{5}{4}\), 0)を通る。</li>
+                  </ul>
+                  <p>(グラフの図は省略しますが、上記の情報を元に漸近線を引き、指定された点を通る双曲線を描きます。\(k=-\frac{3}{2}<0\)なので、漸近線で区切られた領域の左上と右下にグラフが存在します。)</p>
+              </details>
+          </li>
+      </ol>
+    </div>
+    <div class="practice-problems" id="advanced-practice-problems">
+      ✏️ <h3>発展的な練習問題（追加生成）</h3>
+      <ol>
+          <li>
+              分数関数 \(y = \frac{-2x+3}{x+1}\) のグラフを描き、その定義域と値域を求めなさい。 <span class="difficulty">★★★</span> <span class="importance">★★☆</span>
+              <details>
+                  <summary>解答・解説</summary>
+                  <p><strong>式変形:</strong></p>
+                  <p>
+                  \(-2x+3 = -2(x+1) + 2 + 3 = -2(x+1) + 5\)
+                  </p>
+                  <p>
+                  \(y = \frac{-2(x+1)+5}{x+1} = \frac{5}{x+1} - 2\)
+                  </p>
+                  <p>したがって、\(k=5, p=-1, q=-2\)</p>
+                  <p><strong>漸近線:</strong> \(x = -1\), \(y = -2\)</p>
+                  <p><strong>グラフの通過点:</strong></p>
+                  <ul>
+                      <li>y切片 (x=0のとき): \(y = \frac{3}{1} = 3\)。点(0, 3)を通る。</li>
+                      <li>x切片 (y=0のとき): \(-2x+3=0 \Rightarrow x=\frac{3}{2}\)。点(\(\frac{3}{2}\), 0)を通る。</li>
+                  </ul>
+                  <p>(グラフの図は省略。\(k=5>0\)なので、漸近線で区切られた領域の右上と左下にグラフが存在。)</p>
+                  <p><strong>定義域:</strong></p>
+                  <p>分母が0にならないように、\(x+1 \neq 0\)、つまり \(x \neq -1\)。</p>
+                  <p>定義域は \(x \neq -1\) であるすべての実数。</p>
+                  <p><strong>値域:</strong></p>
+                  <p>グラフが漸近線 \(y=-2\) に近づくが決してその値を取らないため、\(y \neq -2\)。</p>
+                  <p>値域は \(y \neq -2\) であるすべての実数。</p>
+              </details>
+          </li>
+          <li>
+              分数関数 \(y = \frac{ax+b}{x+c}\) のグラフが点(1,1)を通り、漸近線の方程式が \(x=2, y=3\) であるとき、定数a,b,cの値を求めなさい。 <span class="difficulty">★★★</span> <span class="importance">★★★</span>
+              <details>
+                  <summary>解答・解説</summary>
+                  <p>漸近線の方程式が \(x=2, y=3\) であるから、この分数関数は次のように書ける。</p>
+                  <p>
+                  \(y = \frac{k}{x-2} + 3\) （kは0でない定数）
+                  </p>
+                  <p>このグラフが点(1,1)を通るので、x=1, y=1を代入して、</p>
+                  <p>
+                  \(1 = \frac{k}{1-2} + 3\)
+                  </p>
+                  <p>
+                  \(1 = \frac{k}{-1} + 3\)
+                  </p>
+                  <p>
+                  \(1 = -k + 3\)
+                  </p>
+                  <p>
+                  \(k = 2\)
+                  </p>
+                  <p>よって、関数は \(y = \frac{2}{x-2} + 3\)。</p>
+                  <p>これを \(y = \frac{ax+b}{x+c}\) の形に戻すために通分する。</p>
+                  <p>
+                  \(y = \frac{2}{x-2} + \frac{3(x-2)}{x-2} = \frac{2 + 3x - 6}{x-2} = \frac{3x-4}{x-2}\)
+                  </p>
+                  <p>元の式 \(y = \frac{ax+b}{x+c}\) と係数を比較して、</p>
+                  <p>\(a=3, b=-4, c=-2\)</p>
+                  <p><strong>答え:</strong> \(a=3, b=-4, c=-2\)</p>
+              </details>
+          </li>
+      </ol>
+    </div>
+</body>
+</html>
