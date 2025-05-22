@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分数関数とそのグラフ、直線との交点</title>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+ китайprocessEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+    </style>
+</head>
+<body>
+    <h1>分数関数とそのグラフ、直線との交点</h1>
+    <p><strong>授業日:</strong> 2025年5月22日</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#section1">分数関数のグラフと漸近線</a>
+                    <ul>
+                        <li><a href="#section1-1">漸近線の確認</a></li>
+                        <li><a href="#section1-2">元となるグラフの確認</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section2">例題1: 分数関数のグラフ描画</a>
+                    <ul>
+                        <li><a href="#section2-1">グラフの描画手順</a></li>
+                        <li><a href="#section2-2">y軸との交点</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section3">例題2: 分数関数と直線の交点</a>
+                    <ul>
+                        <li><a href="#section3-1">問題設定</a></li>
+                        <li><a href="#section3-2">解法: 連立方程式</a></li>
+                        <li><a href="#section3-3">グラフ上での確認</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section4">例題3: 不等式の解法 (グラフ利用)</a>
+                    <ul>
+                        <li><a href="#section4-1">問題設定</a></li>
+                        <li><a href="#section4-2">グラフを用いた考察</a></li>
+                        <li><a href="#section4-3">解の導出と注意点</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section5">Tips/補足説明</a></li>
+                <li><a href="#section6">間違いやすいポイント</a></li>
+                <li><a href="#section7">理解度チェッククイズ</a></li>
+                <li><a href="#section8">標準的な練習問題</a></li>
+                <li><a href="#section9">発展的な練習問題</a></li>
+                <li><a href="#section10">授業全体の要約</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <section id="section1" class="definition">
+        <h2>📖 分数関数のグラフと漸近線</h2>
+        <p><span class="tooltip" data-tooltip="y=(ax+b)/(cx+d) の形で表される関数。グラフは双曲線を描くことが多い。">分数関数</span> $y = \frac{3}{x-1}$ について考えます。</p>
+        <h3 id="section1-1">漸近線の確認</h3>
+        <p>この関数の<span class="tooltip" data-tooltip="関数グラフが限りなく近づくが交わらない直線">漸近線</span>は以下の通りです。 <span class="importance">★★☆</span></p>
+        <ul>
+            <li>$x = 1$</li>
+            <li>$y = 0$</li>
+        </ul>
+        <p>$y$ の漸近線は、分数式の外側に加えられる数によって決まります。この関数 $y = \frac{3}{x-1}$ は、$\frac{3}{x-1} + 0$ と見なせるため、$y$ の漸近線は $y=0$ となります。もし関数が例えば $y = \frac{3}{x-1} + 2$ であれば、$y$ の漸近線は $y=2$ となります。</p>
+        <h3 id="section1-2">元となるグラフの確認</h3>
+        <p>この関数 $y = \frac{3}{x-1}$ の元となるグラフは $y = \frac{3}{x}$ です。 <span class="importance">★★☆</span>
+        この $y = \frac{3}{x}$ のグラフを $x$軸方向に $1$ だけ平行移動したものが $y = \frac{3}{x-1}$ のグラフとなります。</p>
+    </section>
+
+    <section id="section2" class="example">
+        <h2>✍️ 例題1: 分数関数のグラフ描画 <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span></h2>
+        <p>関数 $y = \frac{3}{x-1}$ のグラフを描画します。</p>
+        <h3 id="section2-1">グラフの描画手順</h3>
+        <ol>
+            <li>まず、x軸とy軸を準備します。</li>
+            <li>次に、漸近線 $x=1$ と $y=0$ (x軸) を描きます。見やすくするために、漸近線に色を付けても良いでしょう。</li>
+            <li>元となるグラフ $y = \frac{3}{x}$ は、分子の $3$ が正なので、グラフは右上と左下の領域に描かれる<span class="tooltip" data-tooltip="2つの焦点からの距離の差が一定である点の軌跡。分数関数のグラフなど。">双曲線</span>となります。</li>
+            <li>$y = \frac{3}{x-1}$ のグラフは、この双曲線を漸近線に触れないように描きます。</li>
+        </ol>
+        <div class="supplement">
+            <h4>➕ グラフの概略図（イメージ）</h4>
+            <p>（実際の授業では黒板に描画されますが、ここでは説明に基づいたイメージです）</p>
+            <p>x=1 と y=0 (x軸) を漸近線として、第1象限と第3象限に対応する位置に双曲線が描かれます（ただし座標軸の原点ではなく、漸近線の交点(1,0)を基準とした象限）。</p>
+        </div>
+        <h3 id="section2-2">y軸との交点</h3>
+        <p>グラフがy軸と交わる点の座標を求めます。y軸との交点では $x=0$ ですから、関数に $x=0$ を代入します。</p>
+        <p>$y = \frac{3}{0-1} = \frac{3}{-1} = -3$</p>
+        <p>したがって、y軸との交点は $(0, -3)$ です。グラフを描く際にこの点を通るようにします。</p>
+    </section>
+    
+    <section id="section3" class="example">
+        <h2>✍️ 例題2: 分数関数と直線の交点 <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h2>
+        <h3 id="section3-1">問題設定</h3>
+        <p>関数 $y = \frac{3}{x-1}$ と直線 $y = x+1$ との共有点のx座標を求めます。</p>
+        <h3 id="section3-2">解法: <span class="tooltip" data-tooltip="複数の未知数を含む複数の方程式の組。共通の解を求める。">連立方程式</span></h3>
+        <p>共有点の座標を求めるには、2つの関数の式を連立させて解きます。</p>
+        <p>$\frac{3}{x-1} = x+1$</p>
+        <details>
+            <summary>計算過程</summary>
+            <p>両辺に $(x-1)$ を掛けます（ただし $x \neq 1$）。</p>
+            <p>$3 = (x-1)(x+1)$</p>
+            <p>$3 = x^2 - 1$</p>
+            <p>$x^2 = 3 + 1$</p>
+            <p>$x^2 = 4$</p>
+            <p>$x = \pm 2$</p>
+        </details>
+        <p>よって、共有点のx座標は $x=2$ と $x=-2$ です。</p>
+        <h3 id="section3-3">グラフ上での確認</h3>
+        <p>直線 $y = x+1$ は、傾きが $1$、y切片が $1$ の直線です。この直線を先ほどの分数関数のグラフに重ねて描くと、2点で交わることが視覚的に確認できます。その交点のx座標が $2$ と $-2$ に対応します。</p>
+    </section>
+
+    <section id="section4" class="example">
+        <h2>✍️ 例題3: 不等式の解法 (グラフ利用) <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></h2>
+        <h3 id="section4-1">問題設定</h3>
+        <p>不等式 $\frac{3}{x-1} > x+1$ をグラフを用いて解きます。</p>
+        <h3 id="section4-2">グラフを用いた考察</h3>
+        <p>この不等式は、関数 $y = \frac{3}{x-1}$ のグラフが、直線 $y = x+1$ のグラフよりも上方にある $x$ の範囲を求めることを意味します。 <span class="tips">💡</span></p>
+        <p>例題2で求めた共有点のx座標 ($x=-2, x=2$) と、分数関数の漸近線 ($x=1$) が重要な手がかりとなります。</p>
+        <p>グラフ上で $y = \frac{3}{x-1}$ が $y = x+1$ より上にある部分を探します。</p>
+        <ul>
+            <li>$x < -2$ の範囲</li>
+            <li>$1 < x < 2$ の範囲</li>
+        </ul>
+        <h3 id="section4-3">解の導出と注意点</h3>
+        <p>上記の考察から、不等式の解は次のようになります。</p>
+        <p>$x < -2$ または $1 < x < 2$</p>
+        <div class="caution">
+            <h4>⚠️ 定義域の確認</h4>
+            <p>分数関数 $y = \frac{3}{x-1}$ は、$x=1$ で定義されません（分母が0になるため）。したがって、解の範囲を考える際には、この点を除外する必要があります。今回の場合、$1 < x < 2$ という解の区間は $x=1$ を含んでいないため問題ありません。</p>
+        </div>
+    </section>
+
+    <section id="section5" class="tips">
+        <h2>💡 Tips/補足説明</h2>
+        <ul>
+            <li><strong>漸近線の重要性:</strong> 分数関数のグラフを描く上で、漸近線を正確に把握することが最も重要です。漸近線はグラフの「骨格」となります。</li>
+            <li><strong>対称性:</strong> 分数関数 $y = \frac{k}{x-p} + q$ のグラフは、点 $(p, q)$（漸近線の交点）に関して対称です。この性質を知っていると、グラフの形状をより正確にイメージできます。</li>
+            <li><strong>グラフの活用:</strong> 不等式の問題では、代数的な計算だけでなく、グラフの上下関係を利用することで視覚的に解の範囲を捉えやすくなります。特に複雑な不等式では有効な手段です。</li>
+        </ul>
+    </section>
+
+    <section id="section6" class="caution">
+        <h2>⚠️ 間違いやすいポイント</h2>
+        <ul>
+            <li><strong>漸近線の見落とし・誤り:</strong> $y = \frac{k}{x-p} + q$ の形のとき、漸近線は $x=p, y=q$ です。特に $q=0$ の場合、$y=0$ (x軸) が漸近線であることを見落とさないようにしましょう。</li>
+            <li><strong>分子の符号とグラフの向き:</strong> $y = \frac{k}{x}$ の形で $k>0$ なら右上と左下 (第1,3象限風)、$k<0$ なら左上と右下 (第2,4象限風) に双曲線が描かれます。平行移動後もこの関係は維持されます。</li>
+            <li><strong>連立方程式の計算ミス:</strong> 分母を払う際に、掛け忘れや符号のミスが起こりやすいです。丁寧な計算を心がけましょう。</li>
+            <li><strong>不等式の解の範囲:</strong> グラフを利用する場合、どの範囲でどちらのグラフが上 (または下) にあるかを正確に読み取ることが重要です。漸近線や交点が範囲の区切り目になります。また、定義域 ($x \neq 1$) にも注意が必要です。</li>
+        </ul>
+    </section>
+
+    <section id="section7" class="quiz">
+        <h2>❓ 理解度チェッククイズ</h2>
+        <ol>
+            <li>
+                <p>分数関数 $y = \frac{2}{x+3} - 1$ の漸近線の方程式を答えなさい。</p>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答:</strong> $x = -3$, $y = -1$</p>
+                    <p><strong>解説:</strong> $y = \frac{k}{x-p} + q$ の漸近線は $x=p, y=q$ です。この関数は $y = \frac{2}{x-(-3)} + (-1)$ と変形できるので、$p=-3, q=-1$ となります。</p>
+                </details>
+            </li>
+            <li>
+                <p>関数 $y = \frac{1}{x}$ のグラフを、x軸方向に $2$、y軸方向に $-3$ だけ平行移動したグラフを表す式を答えなさい。</p>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答:</strong> $y = \frac{1}{x-2} - 3$</p>
+                    <p><strong>解説:</strong> x軸方向に $p$、y軸方向に $q$ だけ平行移動する場合、$x$ を $x-p$ に、$y$ を $y-q$ に置き換えます。よって、$y-(-3) = \frac{1}{x-2}$ となり、整理すると $y = \frac{1}{x-2} - 3$ です。</p>
+                </details>
+            </li>
+            <li>
+                <p>分数関数 $y = \frac{1}{x}$ と直線 $y = x$ の共有点のx座標をすべて答えなさい。</p>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答:</strong> $x = 1, x = -1$</p>
+                    <p><strong>解説:</strong> 連立方程式 $\frac{1}{x} = x$ を解きます。$1 = x^2$ より、$x^2 = 1$。したがって $x = \pm 1$ となります ($x \neq 0$ を満たします)。</p>
+                </details>
+            </li>
+        </ol>
+    </section>
+
+    <section id="section8" class="practice-problems">
+        <h2>✏️ 標準的な練習問題</h2>
+        <ol>
+            <li>
+                <p>関数 $y = \frac{-2}{x+1} + 3$ のグラフを描き、漸近線の方程式とy軸との交点の座標を求めなさい。 <span class="difficulty">★☆☆</span></p>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>漸近線:</strong> $x = -1$, $y = 3$</p>
+                    <p><strong>y軸との交点:</strong> $x=0$ を代入すると $y = \frac{-2}{0+1} + 3 = -2 + 3 = 1$。よって $(0, 1)$。</p>
+                    <p><strong>グラフの概略:</strong> 漸近線 $x=-1, y=3$ を描きます。分子が $-2 < 0$ なので、グラフは漸近線の交点を基準として左上と右下の領域に描かれます。点 $(0,1)$ を通ります。</p>
+                </details>
+            </li>
+            <li>
+                <p>分数関数 $y = \frac{4}{x-2}$ と直線 $y = -x+6$ の共有点の座標を求めなさい。 <span class="difficulty">★★☆</span></p>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p>連立方程式 $\frac{4}{x-2} = -x+6$ を解きます ($x \neq 2$）。</p>
+                    <p>$4 = (x-2)(-x+6)$</p>
+                    <p>$4 = -x^2 + 6x + 2x - 12$</p>
+                    <p>$4 = -x^2 + 8x - 12$</p>
+                    <p>$x^2 - 8x + 16 = 0$</p>
+                    <p>$(x-4)^2 = 0$</p>
+                    <p>$x = 4$ (重解)</p>
+                    <p>$x=4$ のとき、$y = -4+6 = 2$。</p>
+                    <p><strong>共有点の座標:</strong> $(4, 2)$ (接します)</p>
+                </details>
+            </li>
+            <li>
+                <p>不等式 $\frac{1}{x+1} \leq x-1$ を解きなさい。 <span class="difficulty">★★☆</span></p>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p>グラフを利用するか、場合分けして代数的に解きます。ここではグラフのイメージで考えます。</p>
+                    <p>$y = \frac{1}{x+1}$ (漸近線 $x=-1, y=0$) と $y = x-1$ (傾き1, y切片-1) のグラフの上下関係を調べます。</p>
+                    <p>共有点を求めると: $\frac{1}{x+1} = x-1 \Rightarrow 1 = (x+1)(x-1) \Rightarrow 1 = x^2-1 \Rightarrow x^2=2 \Rightarrow x = \pm\sqrt{2}$。</p>
+                    <p>グラフを描いて考察すると、分数関数が直線以下になるのは、</p>
+                    <p>$- \sqrt{2} \leq x < -1$ または $x \geq \sqrt{2}$</p>
+                    <p>（$x=-1$ は定義域に含まれないため、$<$ となります）</p>
+                </details>
+            </li>
+        </ol>
+    </section>
+
+    <section id="section9" class="practice-problems">
+        <h2>✏️ 発展的な練習問題</h2>
+        <ol>
+            <li>
+                <p>関数 $y = \frac{x+1}{x-1}$ のグラフと直線 $y = mx+2$ が異なる2点で交わるような、定数 $m$ の値の範囲を求めなさい。 <span class="difficulty">★★★</span></p>
+                <details>
+                    <summary>解答と解説のヒント</summary>
+                    <p>まず、$y = \frac{x+1}{x-1} = \frac{(x-1)+2}{x-1} = 1 + \frac{2}{x-1}$ と変形します。漸近線は $x=1, y=1$ です。</p>
+                    <p>次に、$\frac{2}{x-1} + 1 = mx+2$ を $x$ についての2次方程式に変形し、その判別式 $D$ を考えます。</p>
+                    <p>$\frac{2}{x-1} = mx+1$</p>
+                    <p>$2 = (mx+1)(x-1) \quad (x \neq 1)$</p>
+                    <p>$2 = mx^2 - mx + x - 1$</p>
+                    <p>$mx^2 + (1-m)x - 3 = 0$</p>
+                    <p>この2次方程式が $x=1$ 以外の異なる2つの実数解を持てばよいことになります。</p>
+                    <ol>
+                        <li>$m \neq 0$ の場合: 判別式 $D = (1-m)^2 - 4m(-3) = (1-m)^2 + 12m = 1 - 2m + m^2 + 12m = m^2 + 10m + 1 > 0$ を解きます。解の公式より $m = \frac{-10 \pm \sqrt{100-4}}{2} = -5 \pm \sqrt{24} = -5 \pm 2\sqrt{6}$。よって $m < -5-2\sqrt{6}$ または $m > -5+2\sqrt{6}$。
+                        さらに、$x=1$ が解にならない条件を確認します。$m(1)^2 + (1-m)(1) - 3 \neq 0 \Rightarrow m + 1 - m - 3 \neq 0 \Rightarrow -2 \neq 0$ (これは常に成り立つ)。
+                        </li>
+                        <li>$m = 0$ の場合: $(1-0)x - 3 = 0 \Rightarrow x=3$ となり、解は1つなので不適。</li>
+                    </ol>
+                    <p>したがって、求める $m$ の範囲は $m < -5-2\sqrt{6}$ または $m > -5+2\sqrt{6}$ です。</p>
+                </details>
+            </li>
+        </ol>
+    </section>
+    
+    <section id="section10" class="summary">
+        <h2>🔖 授業全体の要約</h2>
+        <p>本日の授業では、分数関数 $y = \frac{k}{x-p} + q$ のグラフの描き方、特に漸近線の重要性について学びました。また、分数関数と直線の共有点を求める問題（連立方程式の解法）や、グラフを利用した不等式の解法についても扱いました。これらの知識は、より複雑な関数の問題を解く上での基礎となります。</p>
+        <ul>
+            <li>分数関数のグラフは漸近線を基準に描く。</li>
+            <li>分子 $k$ の符号によってグラフの配置が決まる。</li>
+            <li>分数関数と直線の共有点は、式を連立させて解く。</li>
+            <li>不等式は、グラフの上下関係を視覚的に捉えることで解の範囲を特定できる。</li>
+            <li>定義域（分母が0にならない）の確認を忘れない。</li>
+        </ul>
+    </section>
+
+</body>
+</html>
