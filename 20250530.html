@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[単元名 Placeholder]</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+    </style>
+</head>
+<body>
+    <h1>[単元名 Placeholder]</h1>
+    <h2>授業概要</h2>
+    <p>授業日: 2025年05月30日</p>
+    <p>講師: 講師</p>
+    <p>学習目標: 逆関数の概念と求め方、およびグラフ上の関係性を理解する。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro">1. はじめに 📖</a></li>
+                <li><a href="#inverse-function-concept">2. 逆関数の基本的な考え方 💡</a>
+                    <ul>
+                        <li><a href="#function-as-tunnel">関数をトンネルとして捉える</a></li>
+                        <li><a href="#corresponding-inverse">逆の対応関係</a></li>
+                    </ul>
+                </li>
+                <li><a href="#definition-inverse-function">3. 逆関数の定義 📖</a></li>
+                <li><a href="#example-inverse-function">4. 逆関数を求める例 ✍️</a>
+                    <ul>
+                        <li><a href="#example1-linear">例1: 一次関数 \(y = 2x + 1\)</a></li>
+                        <li><a href="#example2-radical">例2: 無理関数 \(y = \sqrt{x-1}\)</a></li>
+                        <li><a href="#example3-exponential">例3: 指数関数 \(y = 2^x\)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#graphical-relationship">5. 元の関数と逆関数のグラフの関係 ⭐</a></li>
+                <li><a href="#important-points-domain-range">6. 定義域と値域に関する重要ポイント ⚠️</a></li>
+                <li><a href="#practice-problems">7. 練習問題 ✏️</a>
+                    <ul>
+                        <li><a href="#practice1">問題1: 問の6番</a></li>
+                    </ul>
+                </li>
+                <li><a href="#quiz">8. 理解度チェッククイズ ❓</a></li>
+                <li><a href="#summary">9. まとめと次回予告 🔖</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro">1. はじめに 📖</h2>
+    <p>本日の授業では、<span class="tooltip" data-tooltip="ある関数に対し、入力と出力を逆にした関係を持つ関数">逆関数</span>について学習します。逆関数の概念、求め方、そして元の関数とのグラフ上の関係性について理解を深めていきましょう。教科書42ページから44ページの内容を扱います。44ページの内容は少し発展的になります。</p>
+
+    <h2 id="inverse-function-concept">2. 逆関数の基本的な考え方 💡 <span class="importance">★★☆</span></h2>
+    <h3 id="function-as-tunnel">関数をトンネルとして捉える</h3>
+    <p>関数 \(y = f(x)\) とは、ある値 \(x\) を入力すると、特定の処理（トンネル）を経て別の値 \(y\) が出力される仕組みと考えることができます。</p>
+    <p>例えば、\(f(x) = x^2\) という関数（トンネル）があるとします。このトンネルに「2」という数字を入れると、「4」という数字が出てきます。また、\(f(x) = x+5\) という関数（トンネル）に「2」を入れると、「7」が出てきます。</p>
+
+    <h3 id="corresponding-inverse">逆の対応関係</h3>
+    <p>逆関数とは、この「トンネル」の処理を逆に行うものです。つまり、出力された \(y\) から元の \(x\) を求める対応関係を考えます。もし \(y = f(x)\) という関数があるなら、それに対応する逆の関数が存在するはずです。</p>
+
+    <div class="definition" id="definition-inverse-function">
+        <h2>3. 逆関数の定義 📖 <span class="importance">★★★</span></h2>
+        <p>関数 \(y = f(x)\) において、その<span class="tooltip" data-tooltip="関数の入力値が取りうる範囲">定義域</span>内の各値 \(x\) に対して、<span class="tooltip" data-tooltip="関数の出力値が取りうる範囲">値域</span>内の値 \(y\) がただ一つ定まるときを考えます。このとき、\(y\) の各値に対して、元の \(x\) をただ一つ定める対応関係が存在する場合、この対応関係を \(f\) の<strong>逆関数</strong>といい、\(y = f^{-1}(x)\) や \(x = f(y)\) のように表します。</p>
+        <p>記号 \(f^{-1}\) は「エフ インバース」と読みます。これは \(f\) のマイナス1乗という意味ではありません。</p>
+        <p class="important">⭐ 重要: 逆関数を求める基本的な手順は、元の関数 \(y = f(x)\) の式を \(x\) について解き、最後に \(x\) と \(y\) を入れ替えることです。</p>
+    </div>
+
+    <h2 id="example-inverse-function">4. 逆関数を求める例 ✍️</h2>
+    <h3 id="example1-linear">例1: 一次関数 \(y = 2x + 1\) <span class="difficulty">★☆☆</span></h3>
+    <p>関数 \(y = 2x + 1\) の逆関数を求めなさい。</p>
+    <details>
+        <summary>解答と解説</summary>
+        <p>1. まず、与えられた式 \(y = 2x + 1\) を \(x\) について解きます。<br>
+        \(y - 1 = 2x\)<br>
+        \(x = \frac{y-1}{2}\)</p>
+        <p>2. 次に、\(x\) と \(y\) を入れ替えます。<br>
+        \(y = \frac{x-1}{2}\)</p>
+        <p class="important">⭐ 答え: \(y = \frac{1}{2}x - \frac{1}{2}\)</p>
+    </details>
+
+    <h3 id="example2-radical">例2: 無理関数 \(y = \sqrt{x-1}\) <span class="difficulty">★★☆</span></h3>
+    <p>関数 \(y = \sqrt{x-1}\) の逆関数を求めなさい。また、その定義域と値域も示しなさい。</p>
+    <details>
+        <summary>解答と解説</summary>
+        <p><strong>元の関数の定義域と値域:</strong><br>
+        ルートの中身は0以上である必要があるため、\(x-1 \geq 0\)。よって、定義域は \(x \geq 1\) です。<br>
+        また、\(\sqrt{\cdot}\) の値は常に0以上なので、値域は \(y \geq 0\) です。</p>
+        <p>1. \(y = \sqrt{x-1}\) を \(x\) について解きます。<br>
+        両辺を2乗します（ただし、\(y \geq 0\) であることに注意）。<br>
+        \(y^2 = x - 1\)<br>
+        \(x = y^2 + 1\)</p>
+        <p>2. \(x\) と \(y\) を入れ替えます。<br>
+        \(y = x^2 + 1\)</p>
+        <p><strong>逆関数の定義域と値域:</strong><br>
+        逆関数では、元の関数の定義域と値域が入れ替わります。<br>
+        したがって、逆関数の定義域は元の関数の値域である \(x \geq 0\) となります。<br>
+        逆関数の値域は元の関数の定義域である \(y \geq 1\) となります。</p>
+        <p class="important">⭐ 答え: 逆関数は \(y = x^2 + 1\)。定義域は \(x \geq 0\)、値域は \(y \geq 1\)。</p>
+    </details>
+
+    <h3 id="example3-exponential">例3: 指数関数 \(y = 2^x\) <span class="difficulty">★★☆</span></h3>
+    <p>関数 \(y = 2^x\) の逆関数を求めなさい。</p>
+    <details>
+        <summary>解答と解説</summary>
+        <p>1. \(y = 2^x\) を \(x\) について解きます。これには対数の定義を用います。<br>
+        \(x = \log_2 y\)</p>
+        <p>2. \(x\) と \(y\) を入れ替えます。<br>
+        \(y = \log_2 x\)</p>
+        <p><strong>元の関数の定義域と値域:</strong><br>
+        \(y = 2^x\) の定義域は実数全体、値域は \(y > 0\) です。</p>
+        <p><strong>逆関数の定義域と値域:</strong><br>
+        逆関数 \(y = \log_2 x\) の定義域は \(x > 0\)（元の関数の値域）、値域は実数全体（元の関数の定義域）となります。これは<span class="tooltip" data-tooltip="対数関数の底の条件は正で1以外、真数の条件は正">対数関数の真数条件</span>（真数は正）とも一致します。</p>
+        <p class="important">⭐ 答え: \(y = \log_2 x\)</p>
+    </details>
+
+    <h2 id="graphical-relationship">5. 元の関数と逆関数のグラフの関係 ⭐ <span class="importance">★★★</span></h2>
+    <p>関数 \(y=f(x)\) のグラフとその逆関数 \(y=f^{-1}(x)\) のグラフは、直線 \(y=x\) に関して対称になります。</p>
+    <p>これは、逆関数を求める際に \(x\) と \(y\) を入れ替える操作が、グラフ上では点 \((a, b)\) を点 \((b, a)\) に移すことに対応し、これが直線 \(y=x\) に関する対称移動となるためです。</p>
+    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22300%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2210%22%20y1%3D%22150%22%20x2%3D%22290%22%20y2%3D%22150%22%20stroke%3D%22gray%22%20stroke-width%3D%221%22%20marker-end%3D%22url(%23arrowhead)%22%2F%3E%3Cline%20x1%3D%22150%22%20y1%3D%22290%22%20x2%3D%22150%22%20y2%3D%2210%22%20stroke%3D%22gray%22%20stroke-width%3D%221%22%20marker-end%3D%22url(%23arrowhead)%22%2F%3E%3Ctext%20x%3D%22280%22%20y%3D%22140%22%20font-size%3D%2212%22%3Ex%3C%2Ftext%3E%3Ctext%20x%3D%22160%22%20y%3D%2220%22%20font-size%3D%2212%22%3Ey%3C%2Ftext%3E%3C!--%20y=x%20line%20--%3E%3Cline%20x1%3D%2210%22%20y1%3D%22290%22%20x2%3D%22290%22%20y2%3D%2210%22%20stroke%3D%22green%22%20stroke-dasharray%3D%224%2C2%22%20stroke-width%3D%221.5%22%2F%3E%3Ctext%20x%3D%22260%22%20y%3D%2240%22%20fill%3D%22green%22%20font-size%3D%2212%22%3Ey=x%3C%2Ftext%3E%3C!--%20Original%20function%20y=2^x%20(example)%20--%3E%3Cpath%20d%3D%22M%20110%20250%20Q%20150%20150%20190%2050%20C%20210%2020%20230%2010%22%20stroke%3D%22blue%22%20fill%3D%22none%22%20stroke-width%3D%222%22%2F%3E%3Ctext%20x%3D%22230%22%20y%3D%2230%22%20fill%3D%22blue%22%20font-size%3D%2212%22%3Ey=2^x%3C%2Ftext%3E%3C!--%20Inverse%20function%20y=log2(x)%20(example)%20--%3E%3Cpath%20d%3D%22M%2020%20210%20Q%20150%20150%20250%20110%20C%20280%2090%20290%2070%22%20stroke%3D%22red%22%20fill%3D%22none%22%20stroke-width%3D%222%22%2F%3E%3Ctext%20x%3D%22240%22%20y%3D%22230%22%20fill%3D%22red%22%20font-size%3D%2212%22%3Ey=log_2%20x%3C%2Ftext%3E%3C!--%20Example%20point%20(2,4)%20on%20y=2^x%20--%3E%3Ccircle%20cx%3D%22170%22%20cy%3D%2275%22%20r%3D%223%22%20fill%3D%22blue%22%2F%3E%3Ctext%20x%3D%22175%22%20y%3D%2270%22%20font-size%3D%2210%22%3E(2,4)%3C%2Ftext%3E%3C!--%20Example%20point%20(4,2)%20on%20y=log2(x)%20--%3E%3Ccircle%20cx%3D%22225%22%20cy%3D%22130%22%20r%3D%223%22%20fill%3D%22red%22%2F%3E%3Ctext%20x%3D%22230%22%20y%3D%22125%22%20font-size%3D%2210%22%3E(4,2)%3C%2Ftext%3E%3C%2Fsvg%3E" alt="y=2^x と y=log_2 x のグラフ（y=xに関して対称）" />
+    <p class="caption">図: \(y=2^x\)（青線）とその逆関数 \(y=\log_2 x\)（赤線）のグラフは、直線 \(y=x\)（緑破線）に関して対称です。</p>
+
+    <div class="caution" id="important-points-domain-range">
+        <h2>6. 定義域と値域に関する重要ポイント ⚠️ <span class="importance">★★★</span></h2>
+        <p>逆関数を考える上で、定義域と値域は非常に重要です。</p>
+        <ul>
+            <li>元の関数 \(y=f(x)\) の<strong>定義域</strong>は、逆関数 \(y=f^{-1}(x)\) の<strong>値域</strong>になります。</li>
+            <li>元の関数 \(y=f(x)\) の<strong>値域</strong>は、逆関数 \(y=f^{-1}(x)\) の<strong>定義域</strong>になります。</li>
+        </ul>
+        <p>特に、逆関数を求めた後に、その定義域を正しく設定しないと、元の関数との対応関係が崩れてしまうことがあります。例えば、\(y = x^2\) の逆関数を単純に \(y = \sqrt{x}\) とすると、\(y = x^2\) の定義域が実数全体であるのに対し、\(y = \sqrt{x}\) の値域は \(y \geq 0\) となり、対応がつきません。この場合、元の関数 \(y=x^2\) の定義域を \(x \geq 0\) に制限すれば、値域も \(y \geq 0\) となり、逆関数 \(y=\sqrt{x}\)（定義域 \(x \geq 0\)、値域 \(y \geq 0\)）と1対1に対応します。</p>
+    </div>
+
+    <div class="practice-problems" id="practice-problems">
+        <h2>7. 練習問題 ✏️ <span class="importance">★★☆</span></h2>
+        <h3 id="practice1">問題1: 問の6番 <span class="difficulty">★★☆</span></h3>
+        <p>関数 \(y = \sqrt{x+3}\) の逆関数を求め、その定義域と値域を示し、グラフを同一座標平面上に図示しなさい。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p><strong>元の関数 \(y = \sqrt{x+3}\) について:</strong><br>
+            定義域: \(x+3 \geq 0 \Rightarrow x \geq -3\)<br>
+            値域: \(y \geq 0\)</p>
+            <p><strong>逆関数を求める:</strong><br>
+            \(y = \sqrt{x+3}\)<br>
+            両辺を2乗して（\(y \geq 0\) に注意）: \(y^2 = x+3\)<br>
+            \(x\) について解く: \(x = y^2 - 3\)<br>
+            \(x\) と \(y\) を入れ替える: \(y = x^2 - 3\)</p>
+            <p><strong>逆関数 \(y = x^2 - 3\) の定義域と値域:</strong><br>
+            定義域: 元の関数の値域より \(x \geq 0\)<br>
+            値域: 元の関数の定義域より \(y \geq -3\)</p>
+            <p class="important">⭐ 答え: 逆関数は \(y = x^2 - 3\)。定義域は \(x \geq 0\)、値域は \(y \geq -3\)。</p>
+            <p><strong>グラフの図示:</strong></p>
+            <p>\(y = \sqrt{x+3}\) のグラフは、\(y=\sqrt{x}\) のグラフをx軸方向に-3平行移動したものです。(-3, 0) を通り、右上がりの曲線です。</p>
+            <p>\(y = x^2 - 3\)（ただし \(x \geq 0\)）のグラフは、放物線 \(y=x^2\) をy軸方向に-3平行移動したもののうち、\(x \geq 0\) の部分です。(0, -3) を頂点とし、y軸の右側を通る放物線の一部です。</p>
+            <p>これらのグラフは、直線 \(y=x\) に関して対称になります。</p>
+            <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22200%22%20x2%3D%22380%22%20y2%3D%22200%22%20stroke%3D%22gray%22%20stroke-width%3D%221%22%20marker-end%3D%22url(%23arrowhead)%22%2F%3E%3Cline%20x1%3D%22200%22%20y1%3D%22380%22%20x2%3D%22200%22%20y2%3D%2220%22%20stroke%3D%22gray%22%20stroke-width%3D%221%22%20marker-end%3D%22url(%23arrowhead)%22%2F%3E%3Ctext%20x%3D%22370%22%20y%3D%22190%22%20font-size%3D%2212%22%3Ex%3C%2Ftext%3E%3Ctext%20x%3D%22210%22%20y%3D%2230%22%20font-size%3D%2212%22%3Ey%3C%2Ftext%3E%3Ctext%20x%3D%22190%22%20y%3D%22215%22%20font-size%3D%2210%22%3EO%3C%2Ftext%3E%3C!--%20y=x%20line%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22380%22%20x2%3D%22380%22%20y2%3D%2220%22%20stroke%3D%22green%22%20stroke-dasharray%3D%224%2C2%22%20stroke-width%3D%221.5%22%2F%3E%3Ctext%20x%3D%22350%22%20y%3D%2250%22%20fill%3D%22green%22%20font-size%3D%2212%22%3Ey=x%3C%2Ftext%3E%3C!--%20Original%20function%20y=sqrt(x+3)%20--%3E%3Cpath%20d%3D%22M%20110%20200%20Q%20140%20160%20200%20110%20C%20230%2080%20280%2050%22%20stroke%3D%22blue%22%20fill%3D%22none%22%20stroke-width%3D%222%22%2F%3E%3Ctext%20x%3D%22280%22%20y%3D%2270%22%20fill%3D%22blue%22%20font-size%3D%2212%22%3Ey=%E2%88%9A(x+3)%3C%2Ftext%3E%3Ccircle%20cx%3D%22110%22%20cy%3D%22200%22%20r%3D%223%22%20fill%3D%22blue%22%2F%3E%3Ctext%20x%3D%2290%22%20y%3D%22215%22%20font-size%3D%2210%22%3E(-3,0)%3C%2Ftext%3E%3C!--%20Inverse%20function%20y=x^2-3%20(x>=0)%20--%3E%3Cpath%20d%3D%22M%20200%20290%20Q%20240%20260%20290%20200%20C%20320%20170%20350%20120%22%20stroke%3D%22red%22%20fill%3D%22none%22%20stroke-width%3D%222%22%2F%3E%3Ctext%20x%3D%22300%22%20y%3D%22310%22%20fill%3D%22red%22%20font-size%3D%2212%22%3Ey=x^2-3%20(x%E2%89%A50)%3C%2Ftext%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22290%22%20r%3D%223%22%20fill%3D%22red%22%2F%3E%3Ctext%20x%3D%20210%22%20y%3D%22305%22%20font-size%3D%2210%22%3E(0,-3)%3C%2Ftext%3E%3C%2Fsvg%3E" alt="y=sqrt(x+3) と y=x^2-3 (x>=0) のグラフ" />
+        </details>
+    </div>
+
+    <div class="quiz" id="quiz">
+        <h2>8. 理解度チェッククイズ ❓ <span class="importance">★★☆</span></h2>
+        <ol>
+            <li>
+                関数 \(y = 3x - 6\) の逆関数は何ですか？
+                <ol type="a">
+                    <li>\(y = \frac{1}{3}x + 2\)</li>
+                    <li>\(y = \frac{1}{3}x - 2\)</li>
+                    <li>\(y = -3x + 6\)</li>
+                </ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: a. \(y = \frac{1}{3}x + 2\)</strong></p>
+                    <p>解説: \(y = 3x - 6\) を \(x\) について解くと、\(y+6 = 3x \Rightarrow x = \frac{y+6}{3} = \frac{1}{3}y + 2\)。<br>
+                    \(x\) と \(y\) を入れ替えて \(y = \frac{1}{3}x + 2\)。</p>
+                </details>
+            </li>
+            <li>
+                関数 \(y=f(x)\) とその逆関数 \(y=f^{-1}(x)\) のグラフは、どの直線に関して対称ですか？
+                <ol type="a">
+                    <li>\(y = -x\)</li>
+                    <li>\(x\)軸</li>
+                    <li>\(y = x\)</li>
+                </ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: c. \(y = x\)</strong></p>
+                    <p>解説: 逆関数のグラフは、元の関数のグラフを直線 \(y=x\) に関して対称移動したものです。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <div class="summary" id="summary">
+        <h2>9. まとめと次回予告 🔖 <span class="importance">★★★</span></h2>
+        <p>本日は逆関数について学習しました。重要なポイントは以下の通りです。</p>
+        <ul>
+            <li>逆関数は、元の関数の入力と出力を逆にした対応関係です。</li>
+            <li>逆関数を求める手順は、「\(x\)について解く」→「\(x\)と\(y\)を入れ替える」です。</li>
+            <li>逆関数では、元の関数の定義域が値域に、値域が定義域になります。この点を常に意識することが大切です。</li>
+            <li>元の関数とその逆関数のグラフは、直線 \(y=x\) に関して対称です。</li>
+        </ul>
+        <p>次回（来週）は、この単元のテスト（小テスト）を実施します。範囲は第2章の内容全体となりますので、しっかりと復習しておいてください。</p>
+    </div>
+
+</body>
+</html>
