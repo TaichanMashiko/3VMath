@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>関数の極限と連続性 (応用)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+ spezifischummary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+
+    </style>
+</head>
+<body>
+    <h1>関数の極限と連続性 (応用)</h1>
+    <h2>授業概要</h2>
+    <p>授業日: 2025年06月02日</p>
+    <p>講師: 講師</p>
+    <p>学習目標: 分数関数の極限の求め方、特に不定形の場合の対処法を理解し、応用問題に取り組む力を養う。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro">はじめに</a></li>
+                <li><a href="#limit-example">1. 例題: 分数関数の極限 ✍️</a></li>
+                <li><a href="#keypoint-indeterminate">2. 重要ポイント: 不定形の極限 ⭐</a></li>
+                <li><a href="#practice-problems-standard">3. 標準的な練習問題 ✏️</a></li>
+                <li><a href="#example-eleven">4. 例題11: 極限値から係数を決定する問題 ✍️</a></li>
+                <li><a href="#tips-rationalization">💡 Tips: 有理化のテクニック</a></li>
+                <li><a href="#practice-problems-advanced">5. 発展的な練習問題 ✏️</a></li>
+                <li><a href="#summary">🔖 授業の要点まとめ</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro">はじめに</h2>
+    <p>本日の授業では、分数関数の極限について、特に<span class="tooltip" data-tooltip="そのままでは極限値が定まらない形。0/0 や ∞/∞ など。">不定形</span>となる場合の計算方法を中心に学習します。これは5月のマンスリーテストで扱った内容と関連しています。</p>
+
+    <h2 id="limit-example">1. 例題: 分数関数の極限 ✍️ <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h2>
+    <p>次の極限値を求めなさい。</p>
+    <p>\[ \lim_{x \to 0} \frac{\sqrt{1+x} - 1}{x} \]</p>
+    <details>
+        <summary>解説</summary>
+        <p>このまま \(x=0\) を代入すると、分母も分子も0となり、\(\frac{0}{0}\) の不定形となります。このような場合は、式を変形して不定形を解消する必要があります。</p>
+        <p>分子にルートが含まれているため、<span class="tooltip" data-tooltip="分母または分子のルートを消すために、その共役な式を掛ける操作。">有理化</span>を行います。分子の \(\sqrt{1+x} - 1\) に対して、\(\sqrt{1+x} + 1\) を分母と分子に掛けます。</p>
+        <p>\[ \begin{aligned} \lim_{x \to 0} \frac{\sqrt{1+x} - 1}{x} &= \lim_{x \to 0} \frac{(\sqrt{1+x} - 1)(\sqrt{1+x} + 1)}{x(\sqrt{1+x} + 1)} \\ &= \lim_{x \to 0} \frac{(1+x) - 1^2}{x(\sqrt{1+x} + 1)} \\ &= \lim_{x \to 0} \frac{1+x - 1}{x(\sqrt{1+x} + 1)} \\ &= \lim_{x \to 0} \frac{x}{x(\sqrt{1+x} + 1)} \end{aligned} \] </p>
+        <p>\(x \neq 0\) として \(x\) で約分すると、</p>
+        <p>\[ \lim_{x \to 0} \frac{1}{\sqrt{1+x} + 1} \]</p>
+        <p>ここで \(x=0\) を代入すると、</p>
+        <p>\[ \frac{1}{\sqrt{1+0} + 1} = \frac{1}{\sqrt{1} + 1} = \frac{1}{1 + 1} = \frac{1}{2} \]</p>
+        <p class="important">⭐ 答え: \(\frac{1}{2}\)</p>
+    </details>
+
+    <div class="quiz">
+        <h4>理解度チェッククイズ ❓ <span class="importance">★★☆</span></h4>
+        <ol>
+            <li>分数関数の極限で \(\frac{0}{0}\) の不定形になった場合、まず試みるべき変形は何ですか？
+                <ol type="a">
+                    <li>ロピタルの定理を使う</li>
+                    <li>分子または分母の有理化、または因数分解による約分</li>
+                    <li>グラフを描いて視覚的に判断する</li>
+                </ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: b. 分子または分母の有理化、または因数分解による約分</strong></p>
+                    <p>解説: \(\frac{0}{0}\) の不定形の場合、多くは式変形（有理化や因数分解）によって不定形を解消し、極限値を求めることができます。ロピタルの定理は高校数学の範囲外（または発展内容）です。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <h2 id="keypoint-indeterminate">2. 重要ポイント: 不定形の極限 ⭐ <span class="importance">★★★</span></h2>
+    <p class="important">極限の計算において、そのまま値を代入すると \(\frac{0}{0}\) や \(\frac{\infty}{\infty}\), \(\infty - \infty\), \(0 \cdot \infty\) などの形になる場合を「不定形」と呼びます。不定形の極限を求めるには、以下のいずれかの方法で式を変形し、不定形を解消する必要があります。</p>
+    <ul>
+        <li><strong>約分:</strong> 多項式の場合、共通因数で約分します。</li>
+        <li><strong>有理化:</strong> ルートを含む場合、共役な式を掛けて有理化します。</li>
+        <li><strong>最高次の項で割る:</strong> \(x \to \infty\) の場合、分母の最高次の項で分母分子を割ります。</li>
+    </ul>
+    <p class="caution">⚠️ \(x\) で割る操作を行う場合、\(x \neq 0\) であることを確認する必要があります。極限の計算では、\(x\) はその値に限りなく近づくものであり、完全にその値になるわけではないため、通常 \(x \neq 0\) として扱えます。</p>
+
+    <h2 id="practice-problems-standard">3. 標準的な練習問題 ✏️ <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></h2>
+    <p>練習3: 次の極限値を求めなさい。</p>
+    <p>(1) \(\lim_{x \to 4} \frac{x-4}{\sqrt{x}-2}\)</p>
+    <p>(2) \(\lim_{x \to 0} \frac{1}{x} \left( \frac{1}{2} - \frac{1}{x+2} \right)\)</p>
+    <details>
+        <summary>解答 (1)</summary>
+        <p>そのまま \(x=4\) を代入すると \(\frac{0}{0}\) の不定形になります。分母を有理化します。</p>
+        <p>\[ \begin{aligned} \lim_{x \to 4} \frac{x-4}{\sqrt{x}-2} &= \lim_{x \to 4} \frac{(x-4)(\sqrt{x}+2)}{(\sqrt{x}-2)(\sqrt{x}+2)} \\ &= \lim_{x \to 4} \frac{(x-4)(\sqrt{x}+2)}{x-4} \\ &= \lim_{x \to 4} (\sqrt{x}+2) \\ &= \sqrt{4}+2 = 2+2 = 4 \end{aligned} \] </p>
+        <p><strong>答え: 4</strong></p>
+    </details>
+    <details>
+        <summary>解答 (2)</summary>
+        <p>まず括弧の中を通分します。</p>
+        <p>\[ \begin{aligned} \lim_{x \to 0} \frac{1}{x} \left( \frac{1}{2} - \frac{1}{x+2} \right) &= \lim_{x \to 0} \frac{1}{x} \left( \frac{(x+2)-2}{2(x+2)} \right) \\ &= \lim_{x \to 0} \frac{1}{x} \left( \frac{x}{2(x+2)} \right) \end{aligned} \] </p>
+        <p>\(x \neq 0\) として \(x\) で約分すると、</p>
+        <p>\[ \lim_{x \to 0} \frac{1}{2(x+2)} \]</p>
+        <p>ここで \(x=0\) を代入すると、</p>
+        <p>\[ \frac{1}{2(0+2)} = \frac{1}{4} \]</p>
+        <p><strong>答え: \(\frac{1}{4}\)</strong></p>
+    </details>
+
+    <h2 id="example-eleven">4. 例題11: 極限値から係数を決定する問題 ✍️ <span class="difficulty">★★★</span> <span class="importance">★★★</span></h2>
+    <p>等式 \(\lim_{x \to 1} \frac{\sqrt{x+a} - b}{x-1} = \frac{1}{4}\) が成り立つように、定数 \(a, b\) の値を定めなさい。</p>
+    <details>
+        <summary>解説</summary>
+        <p>まず、\(x \to 1\) のとき、分母は \(x-1 \to 1-1 = 0\) となります。</p>
+        <p>もし分子が0以外の値に収束すると、極限値は \(\infty\) または \(-\infty\) に発散してしまい、\(\frac{1}{4}\) という有限な値に収束しません。</p>
+        <p>したがって、極限値が有限な値 \(\frac{1}{4}\) になるためには、分子も \(x \to 1\) のとき0に収束する必要があります（不定形 \(\frac{0}{0}\) を作る）。</p>
+        <p>よって、\(\lim_{x \to 1} (\sqrt{x+a} - b) = 0\)<br>
+        \(\sqrt{1+a} - b = 0\)<br>
+        \(\sqrt{1+a} = b \quad \cdots ①\)</p>
+        <p>次に、この条件①を使って元の極限の式を変形します。不定形なので有理化を行います。<br>
+        \[ \begin{aligned} \lim_{x \to 1} \frac{\sqrt{x+a} - b}{x-1} &= \lim_{x \to 1} \frac{(\sqrt{x+a} - b)(\sqrt{x+a} + b)}{(x-1)(\sqrt{x+a} + b)} \\ &= \lim_{x \to 1} \frac{(x+a) - b^2}{(x-1)(\sqrt{x+a} + b)} \end{aligned} \] </p>
+        <p>ここで、①より \(b^2 = 1+a\) なので、これを代入すると、<br>
+        \[ \begin{aligned} &= \lim_{x \to 1} \frac{x+a - (1+a)}{(x-1)(\sqrt{x+a} + b)} \\ &= \lim_{x \to 1} \frac{x-1}{(x-1)(\sqrt{x+a} + b)} \end{aligned} \] </p>
+        <p>\(x \neq 1\) として \(x-1\) で約分すると、<br>
+        \[ \lim_{x \to 1} \frac{1}{\sqrt{x+a} + b} \]</p>
+        <p>ここで \(x=1\) を代入すると、<br>
+        \[ \frac{1}{\sqrt{1+a} + b} \]</p>
+        <p>この極限値が \(\frac{1}{4}\) に等しいので、<br>
+        \(\frac{1}{\sqrt{1+a} + b} = \frac{1}{4}\)<br>
+        \(\sqrt{1+a} + b = 4 \quad \cdots ②\)</p>
+        <p>① \(\sqrt{1+a} = b\) を ② に代入すると、<br>
+        \(b + b = 4\)<br>
+        \(2b = 4\)<br>
+        \(b = 2\)</p>
+        <p>これを①に代入して \(a\) を求めると、<br>
+        \(\sqrt{1+a} = 2\)<br>
+        両辺を2乗して、<br>
+        \(1+a = 4\)<br>
+        \(a = 3\)</p>
+        <p class="important">⭐ 答え: \(a = 3, b = 2\)</p>
+        <p class="supplement">➕ 検証: \(a=3, b=2\) を元の式に代入すると、
+        \[ \lim_{x \to 1} \frac{\sqrt{x+3} - 2}{x-1} \]
+        これは \(\frac{0}{0}\) の不定形。有理化すると、
+        \[ \lim_{x \to 1} \frac{(x+3)-4}{(x-1)(\sqrt{x+3}+2)} = \lim_{x \to 1} \frac{x-1}{(x-1)(\sqrt{x+3}+2)} = \lim_{x \to 1} \frac{1}{\sqrt{x+3}+2} = \frac{1}{\sqrt{4}+2} = \frac{1}{2+2} = \frac{1}{4} \]
+        となり、問題の条件を満たします。</p>
+    </details>
+
+    <div class="tips" id="tips-rationalization">
+        <h3>💡 Tips: 有理化のテクニック <span class="importance">★★☆</span></h3>
+        <p>極限計算でルートを含む不定形が出てきた場合、有理化は非常に強力な手段です。有理化の際のポイントは以下の通りです。</p>
+        <ul>
+            <li><strong>共役な式を掛ける:</strong> \(\sqrt{A} - B\) の形なら \(\sqrt{A} + B\) を、\(\sqrt{A} + B\) の形なら \(\sqrt{A} - B\) を分母と分子に掛けます。これにより、\((X-Y)(X+Y) = X^2 - Y^2\) の公式を利用してルートを消すことができます。</li>
+            <li><strong>約分できる形を目指す:</strong> 有理化の目的は、不定形の原因となっている因子（例えば \(x-a\) など）を約分して消去することです。計算を進める中で、この因子が分子または分母に現れるように意識しましょう。</li>
+            <li><strong>分母の有理化と分子の有理化:</strong> 不定形の状況に応じて、分母を有理化する場合もあれば、分子を有理化する場合もあります。どちらにルートが含まれているか、どちらのルートを消せば約分につながるかを見極めることが大切です。</li>
+            <li><strong>計算ミスの注意:</strong> 有理化の計算は符号ミスや展開ミスが起こりやすい箇所です。特に、複数の項がある場合の2乗の展開や、マイナス符号の扱いには十分注意してください。</li>
+        </ul>
+    </div>
+
+    <div class="practice-problems" id="practice-problems-advanced">
+        <h3>✏️ 発展的な練習問題 <span class="importance">★★★</span></h3>
+        <h4>問題 1 <span class="difficulty">★★★</span></h4>
+        <p>等式 \(\lim_{x \to 2} \frac{ax^2 + bx - 10}{x-2} = 7\) が成り立つように、定数 \(a, b\) の値を定めなさい。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>\(x \to 2\) のとき、分母は \(x-2 \to 0\) となります。</p>
+            <p>極限値が有限な値7になるためには、分子も \(x \to 2\) のとき0に収束する必要があります。<br>
+            よって、\(\lim_{x \to 2} (ax^2 + bx - 10) = 0\)<br>
+            \(a(2)^2 + b(2) - 10 = 0\)<br>
+            \(4a + 2b - 10 = 0\)<br>
+            \(2a + b - 5 = 0 \Rightarrow b = 5 - 2a \quad \cdots ①\)</p>
+            <p>元の極限の式に \(b = 5 - 2a\) を代入します。<br>
+            \[ \begin{aligned} \lim_{x \to 2} \frac{ax^2 + (5-2a)x - 10}{x-2} &= \lim_{x \to 2} \frac{ax^2 + 5x - 2ax - 10}{x-2} \\ &= \lim_{x \to 2} \frac{a(x^2 - 2x) + 5(x - 2)}{x-2} \\ &= \lim_{x \to 2} \frac{ax(x - 2) + 5(x - 2)}{x-2} \\ &= \lim_{x \to 2} \frac{(x-2)(ax + 5)}{x-2} \end{aligned} \] </p>
+            <p>\(x \neq 2\) として \(x-2\) で約分すると、<br>
+            \[ \lim_{x \to 2} (ax + 5) \]</p>
+            <p>ここで \(x=2\) を代入すると、<br>
+            \(a(2) + 5 = 2a + 5\)</p>
+            <p>この極限値が7に等しいので、<br>
+            \(2a + 5 = 7\)<br>
+            \(2a = 2\)<br>
+            \(a = 1\)</p>
+            <p>これを①に代入して \(b\) を求めると、<br>
+            \(b = 5 - 2(1) = 5 - 2 = 3\)</p>
+            <p class="important">⭐ 答え: \(a = 1, b = 3\)</p>
+        </details>
+    </div>
+
+    <div class="summary" id="summary">
+        <h2>🔖 授業の要点まとめ <span class="importance">★★★</span></h2>
+        <ul>
+            <li>分数関数の極限で \(\frac{0}{0}\) の不定形になる場合、有理化や因数分解による約分で不定形を解消します。</li>
+            <li>極限値が有限な値に収束し、かつ分母が0に収束する場合、分子も0に収束する必要があります。この性質を利用して未知の係数を決定できます。</li>
+            <li>有理化は、ルートを含む項からルートを消去し、約分可能な形を作り出すための重要なテクニックです。</li>
+            <li>計算過程では、極限を取る変数が0に近づく場合でも、その変数自身は0ではないという前提で約分を行います。</li>
+        </ul>
+    </div>
+
+</body>
+</html>
